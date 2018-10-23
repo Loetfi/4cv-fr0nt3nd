@@ -26,7 +26,7 @@ class AuthController extends Controller
         $user = Socialite::driver($provider)->user();
         $authUser = $this->findOrCreateUser($user, $provider);
         Auth::login($authUser, true);
-        return redirect('/');
+        return redirect('/home');
     }
     /**
      * If a user has registered before using social auth, return the user
