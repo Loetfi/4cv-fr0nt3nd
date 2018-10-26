@@ -244,6 +244,7 @@
             </div>
         </div>
 
+        @guest
         <!-- POPUP LOGIN -->
         <!-- line modal -->
         <div class="modal modal-registration fade mt60" id="ModalLogin" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
@@ -265,7 +266,26 @@
                                             <input id="password" type="password" name="firstname" placeholder="Password" class="form-control input-md" type="text">
                                         </div>
                                     </div>
+
+                                    <div class="form-group text-left">
+                                    </div>
+
                                     <div class="form-group text-right">
+                                        <div style="float:left!important">
+                                            <a href="{{ url('auth/google') }}" title="Login with google">
+                                                <i class="fa fa-google"></i>
+                                            </a>
+                                            <a href="{{ url('auth/facebook') }}" title="Login with facebook">
+                                                <i class="fa fa-facebook"></i>
+                                            </a>
+                                            <a href="">
+                                                <i class="fa fa-twitter"></i>
+                                            </a>
+                                            <a href="{{ url('auth/linkedin') }}" title="Login with linkedin">
+                                                <i class="fa fa-linkedin"></i>
+                                            </a>
+                                        </div>
+
                                         <button class="btn btn-line-info">cancel</button>
                                         <button class="btn btn-green">Daftar</button>   
                                     </div>
@@ -276,6 +296,9 @@
                 </div>
             </div>
         </div>
+        @else
+        <!-- user login -->
+        @endguest
 
         <!-- Dragable Testimonial Section -->
         <script src="{{ asset('frontend/js/jquery-2.2.0.min.js') }}" type="text/javascript"></script>

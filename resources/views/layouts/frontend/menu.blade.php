@@ -14,7 +14,7 @@
     </div>
 </div>
 <!-- MOBILE MENU END -->
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+<nav class="navbar navbar-inverse navbar-fixed-top {{ (Request::path() == '/') ? '' : 'bg-white large'  }}" role="navigation">
     <div class="bgnav"></div>
     <div class="container">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -33,8 +33,23 @@
                 <!--<li class="smd"><a href="#" title=""><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
                     <li class="smd"><a href="#" title=""><i class="fa fa-google-plus" aria-hidden="true"></i></a></li>
                     <li class="smd"><a href="#" title=""><i class="fa fa-twitter" aria-hidden="true"></i></a></li> -->
-                <li><a class="hover-cursor" data-toggle="modal" data-target="#ModalLogin">Masuk</a></li>
-                <li><a class="hover-cursor" data-toggle="modal" data-target="#ModalRegistration">Daftar</a></li>
+                @guest
+                    <li><a class="hover-cursor" data-toggle="modal" data-target="#ModalLogin">Masuk</a></li>
+                    <li><a class="hover-cursor" data-toggle="modal" data-target="#ModalRegistration">Daftar</a></li>
+                @else
+                    <li class="nav-login">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            {{ Auth::user()->name }}</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Profile</a></li>
+                            <li><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">sign out</a>
+                            </li>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                        </ul>
+                    </li>
+                @endguest
             </ul>
         </div>
         <!-- /.navbar-collapse -->

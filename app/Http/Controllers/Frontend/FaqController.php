@@ -9,6 +9,6 @@ class FaqController extends Controller
 {
     public function index()
     {
-    	return view('frontend.faq.index');
+    	return view('frontend.faq.index_faq');
     }
 }

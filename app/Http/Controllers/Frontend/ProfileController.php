@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Frontend;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class HomeController extends Controller
+class ProfileController extends Controller
 {
     public function index()
     {
-    	return view('frontend.home.index_home');	
+    	return view('frontend.profile.index_profile');
     }
 }

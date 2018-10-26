@@ -13,7 +13,7 @@
 
 Route::group(['namespace'=>'Frontend'], function() {
 	
-	Route::get('/','HomeController@index');
+	Route::get('/','HomeController@index')->name('index');
 
 	Route::get('/about-us','AboutController@index');
 	
@@ -21,6 +21,7 @@ Route::group(['namespace'=>'Frontend'], function() {
 
 	Route::get('/contact-us','ContactController@index');
 
+	Route::get('/profile','ProfileController@index')->middleware('auth');
 });
 
 Auth::routes();
