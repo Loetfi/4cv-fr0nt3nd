@@ -39,7 +39,7 @@
                 @else
                     <li class="nav-login">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            {{ Auth::user()->name }}</a>
+                            {{ Auth::user()->FullName }}</a>
                         <ul class="dropdown-menu">
                             <li><a href="#">Profile</a></li>
                             <li><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">sign out</a>
