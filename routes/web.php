@@ -31,3 +31,8 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('auth/{provider}', 'Auth\AuthController@redirectToProvider');
 Route::get('auth/{provider}/callback', 'Auth\AuthController@handleProviderCallback');
 Route::get('/test_conn_pgsql', 'HomeController@test_conn_pgsql');
+
+$router->post('/api', function () use ($router) {
+     return 'oke'; //$router->app->version();
+  //  return redirect('/api/documentation');
+});
