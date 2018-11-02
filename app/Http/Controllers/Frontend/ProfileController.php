@@ -9,6 +9,8 @@ class ProfileController extends Controller
 {
     public function index()
     {
+    	// dd($request->session()->all());
+    	// $request->session()->get('access_token');
     	return view('frontend.profile.index_profile');
     }
 }

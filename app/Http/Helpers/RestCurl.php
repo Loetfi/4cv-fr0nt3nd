@@ -8,7 +8,7 @@ Class RestCurl {
   public static function exec($method, $url, $obj = array(), $token = '') {
     $header = ['Accept: application/json','Content-Type: application/json'];
     if(!empty($token)){
-      $authorization = 'Authorization: '.$token;
+      $authorization = 'Authorization: Bearer ' .$token;
       array_push($header, $authorization);
     }
     $curl = curl_init();

@@ -15,24 +15,26 @@ Route::group(['namespace'=>'Frontend'], function() {
 	
 	Route::get('/','HomeController@index')->name('index');
 
-	Route::get('/about-us','AboutController@index');
+	Route::get('about-us','AboutController@index');
 	
-	Route::get('/faq','FaqController@index');
+	Route::get('faq','FaqController@index');
 
-	Route::get('/contact-us','ContactController@index');
+	Route::get('contact-us','ContactController@index');
 
-	Route::get('/profile','ProfileController@index')->middleware('auth');
+	Route::group(['middleware'=>'check-access'], function() {
+
+		Route::get('profile','ProfileController@index');
+
+		Route::get('logout','AuthController@logout');
+	});
 });
 
-Auth::routes();
+// Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('home', 'HomeController@index')->name('home');
 // socialite
 Route::get('auth/{provider}', 'Auth\AuthController@redirectToProvider');
 Route::get('auth/{provider}/callback', 'Auth\AuthController@handleProviderCallback');
-Route::get('/test_conn_pgsql', 'HomeController@test_conn_pgsql');
 
-$router->post('/api', function () use ($router) {
-     return 'oke'; //$router->app->version();
-  //  return redirect('/api/documentation');
-});
+Route::get('test_conn_pgsql', 'HomeController@test_conn_pgsql');
+

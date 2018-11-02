@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\Http\Helpers\Api;
+use App\Http\Helpers\RestCurl;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
@@ -24,10 +26,28 @@ class AuthController extends Controller
     public function handleProviderCallback($provider)
     {
         $user = Socialite::driver($provider)->user();
-        $authUser = $this->findOrCreateUser($user, $provider);
-        Auth::login($authUser, true);
-        return redirect('/profile');
+        
+        $authSession = $this->findOrCreateUser($user, $provider);
+
+        if ($authSession > 0) {
+            $param = array(
+                'email' => $user->email,
+                'password' => 12345678
+                 );
+            
+            $login = (object) RestCurl::exec('POST','http://localhost/svc-account/public/auth/login',$param);
+            
+            if ($login->status == 200 ) {
+                $loginSession = (array) $login->data;
+                session(['user' => $loginSession]);
+            } else {
+                return redirect('/');
+            }
+        }
+
+        return redirect('profile');
     }
+
     /**
      * If a user has registered before using social auth, return the user
      * else, create a new user object.
@@ -37,18 +57,58 @@ class AuthController extends Controller
      */
     public function findOrCreateUser($user, $provider)
     {
-        $authUser = User::where('ProviderId', $user->id)->first();
-        if ($authUser) {
-            return $authUser;
-        }
-        else{
-            $data = User::create([
-                'FullName'  => $user->name,
-                'Email'     => !empty($user->email)? $user->email : '' ,
-                'Provider'   => $provider,
-                'ProviderId' => $user->id
-            ]);
-            return $data;
+        $authSession = (object) RestCurl::exec('POST','http://localhost/svc-account/public/auth/check-user-provider',['provider_id' => $user->id]);
+        dd($authSession);
+        if ($authSession->data->data->user) {
+            return $authSession;
+        } else {
+
+            $data = [
+                'fullname'      => $user->name,
+                'email'         => $user->email,
+                'avatar'        => $user->avatar,
+                'provider'      => $provider,
+                'provider_id'   => $user->id,
+                'password'      => '12345678',
+                'confirm_password'=> '12345678'
+            ];
+
+            $authUser = (object) RestCurl::exec('POST','http://localhost/svc-account/public/auth/register',$data);
+            return $authSession = (array) $authUser->data->data->user;
         }
     }
+
+    public function login()
+    {
+        try {
+            $param = array(
+                'email' => $user->email,
+                'password' => 12345678
+                 );
+            
+            $login =  (object) RestCurl::exec('POST','http://localhost/svc-account/public/auth/login',$param);
+
+            if ($login->status == 200 ) {
+                $loginSession = (array) $login->data->data;
+                session(['user' => $loginSession]);
+            } else {
+                return redirect('/');
+            }
+        } catch (\Exception $e) {
+            return response()->json(Api::format('0',['message'=>$e->getMessage()],'Error'), 500);
+        }
+    }
+
+    public function logout()
+    {
+        try {
+            $token  = session()->get('access_token');
+            $r =  (object) RestCurl::exec('GET','http://localhost/svc-account/public/auth/logout',[],$token);
+
+        } catch (\Exception $e) {
+            return response()->json(Api::format('0',['message'=>$e->getMessage()],'Error'), 500);
+        }
+
+        return response()->json(Api::format('1',['message'=> $r->message], 'Success'),200);
+    }   
 }

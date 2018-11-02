@@ -33,23 +33,19 @@
                 <!--<li class="smd"><a href="#" title=""><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
                     <li class="smd"><a href="#" title=""><i class="fa fa-google-plus" aria-hidden="true"></i></a></li>
                     <li class="smd"><a href="#" title=""><i class="fa fa-twitter" aria-hidden="true"></i></a></li> -->
-                @guest
+                @if(! session()->get('access_token'))
                     <li><a class="hover-cursor" data-toggle="modal" data-target="#ModalLogin">Masuk</a></li>
                     <li><a class="hover-cursor" data-toggle="modal" data-target="#ModalRegistration">Daftar</a></li>
                 @else
                     <li class="nav-login">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            {{ Auth::user()->FullName }}</a>
+                            {{ session()->get('FullName') }}</a>
                         <ul class="dropdown-menu">
                             <li><a href="#">Profile</a></li>
-                            <li><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">sign out</a>
-                            </li>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                @csrf
-                            </form>
+                            <li><a href="http://localhost/svc-account/public/auth/logout">sign out</a>
                         </ul>
                     </li>
-                @endguest
+                @endif
             </ul>
         </div>
         <!-- /.navbar-collapse -->
