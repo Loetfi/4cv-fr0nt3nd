@@ -20,7 +20,7 @@ class CheckAccess
         try {
             $token = session()->get('access_token');
             // $valid = $request->header('Authorization','Bearer '.$token);
-            $r =  (object) RestCurl::exec('GET','http://localhost/svc-account/public/auth/check-token',[],$token);
+            $r =  (object) RestCurl::exec('GET',env('URL_SERVICE_ACCOUNT').'/auth/check-token',[],$token);
             // dd($r->status);
             if($r->data->status !== '1')
             {
@@ -29,7 +29,7 @@ class CheckAccess
             else if($r->status == 200) // refresh_token 
             {
                 $refresh_token = $r->data->data->refresh_token;
-                $r =  (object) RestCurl::exec('GET','http://localhost/svc-account/public/auth/check-token',[],$refresh_token);
+                $r =  (object) RestCurl::exec('GET',env('URL_SERVICE_ACCOUNT').'/auth/check-token',[],$refresh_token);
                 session(['refresh_token'=>$refresh_token]);
             }   
         
