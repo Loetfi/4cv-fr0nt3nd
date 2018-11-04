@@ -28,24 +28,27 @@ class AuthController extends Controller
         $user = Socialite::driver($provider)->user();
         
         $authSession = $this->findOrCreateUser($user, $provider);
-
-        if ($authSession > 0) {
+        // dd($authSession);
+        if ($authSession) {
             $param = array(
                 'email' => $user->email,
                 'password' => 12345678
                  );
             
             $login = (object) RestCurl::exec('POST','http://localhost/svc-account/public/auth/login',$param);
-            
+            // dd($login);
             if ($login->status == 200 ) {
-                $loginSession = (array) $login->data;
-                session(['user' => $loginSession]);
+                $loginSession = (array) $login->data->data;
+                session($loginSession);
+                
+                return redirect('profile'); 
+
             } else {
                 return redirect('/');
             }
+        } else {
+            return redirect('/');
         }
-
-        return redirect('profile');
     }
 
     /**
@@ -58,8 +61,8 @@ class AuthController extends Controller
     public function findOrCreateUser($user, $provider)
     {
         $authSession = (object) RestCurl::exec('POST','http://localhost/svc-account/public/auth/check-user-provider',['provider_id' => $user->id]);
-        dd($authSession);
-        if ($authSession->data->data->user) {
+        // dd($authSession);
+        if ($authSession->data->data) {
             return $authSession;
         } else {
 
@@ -74,7 +77,7 @@ class AuthController extends Controller
             ];
 
             $authUser = (object) RestCurl::exec('POST','http://localhost/svc-account/public/auth/register',$data);
-            return $authSession = (array) $authUser->data->data->user;
+            return $authSession = (array) $authUser->data->data;
         }
     }
 
@@ -90,7 +93,7 @@ class AuthController extends Controller
 
             if ($login->status == 200 ) {
                 $loginSession = (array) $login->data->data;
-                session(['user' => $loginSession]);
+                session($loginSession);
             } else {
                 return redirect('/');
             }
