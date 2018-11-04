@@ -46,9 +46,9 @@ class AuthController extends Controller
                 $request->session()->flash('status', 'Silahkan coba kembali.');
                 return redirect('/');
             }
-        } else {
-            return redirect('/');
         }
+
+        return redirect('profile');
     }
 
     /**
@@ -95,7 +95,7 @@ class AuthController extends Controller
 
             if ($login->status == 200 ) {
                 $loginSession = (array) $login->data->data;
-                session($loginSession);
+                session(['user' => $loginSession]);
             } else {
                 return redirect('/');
             }
