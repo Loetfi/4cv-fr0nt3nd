@@ -13,7 +13,7 @@
         </ul>
     </div>
 </div>
-<!-- MOBILE MENU END -->
+<!-- MOBILE MENU END --> 
 <nav class="navbar navbar-inverse navbar-fixed-top {{ (Request::path() == '/') ? '' : 'bg-white large'  }}" role="navigation">
     <div class="bgnav"></div>
     <div class="container">
@@ -39,7 +39,7 @@
                 @else
                     <li class="nav-login">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            {{ session()->get('FullName') }}</a>
+                            {{ session()->get('user.FullName') }}</a>
                         <ul class="dropdown-menu">
                             <li><a href="#">Profile</a></li>
                             <li><a href="http://localhost/svc-account/public/auth/logout">sign out</a>

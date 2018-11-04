@@ -7,10 +7,9 @@ use App\Http\Controllers\Controller;
 
 class ProfileController extends Controller
 {
-    public function index()
-    {
-    	// dd($request->session()->all());
-    	// $request->session()->get('access_token');
+    public function index(Request $request)
+    { 
+    	// panggil session jika ingin attribute user
     	return view('frontend.profile.index_profile');
     }
 }

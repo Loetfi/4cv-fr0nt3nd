@@ -27,23 +27,23 @@ class AuthController extends Controller
     {
         $user = Socialite::driver($provider)->user();
         
+        // cek apakah user dengan email sosmed tsb sudah pernah ada atau belum.
         $authSession = $this->findOrCreateUser($user, $provider);
-        // dd($authSession);
-        if ($authSession) {
+        if (count($authSession) > 0) {
+            // jika ada
             $param = array(
-                'email' => $user->email,
+                'email' => $authSession->Email,
                 'password' => 12345678
                  );
-            
-            $login = (object) RestCurl::exec('POST','http://localhost/svc-account/public/auth/login',$param);
-            // dd($login);
+            // maka diloginkan langsung
+            $login = (object) RestCurl::exec('POST',env('URL_SERVICE_ACCOUNT').'/auth/login',$param);
+
             if ($login->status == 200 ) {
                 $loginSession = (array) $login->data->data;
-                session($loginSession);
-                
-                return redirect('profile'); 
-
+                // dijadikan ke session dengan array user
+                session(['access_token' => $loginSession['access_token'] ]);
             } else {
+                $request->session()->flash('status', 'Silahkan coba kembali.');
                 return redirect('/');
             }
         } else {
@@ -60,24 +60,26 @@ class AuthController extends Controller
      */
     public function findOrCreateUser($user, $provider)
     {
-        $authSession = (object) RestCurl::exec('POST','http://localhost/svc-account/public/auth/check-user-provider',['provider_id' => $user->id]);
-        // dd($authSession);
-        if ($authSession->data->data) {
-            return $authSession;
+        $authSession = (object) RestCurl::exec('POST',env('URL_SERVICE_ACCOUNT').'/auth/check-user-provider',['email' => $user->email]);
+
+        if (!empty($authSession->data->data->Email)) {
+            
+            return (object)$authSession->data->data;
+
         } else {
 
             $data = [
                 'fullname'      => $user->name,
                 'email'         => $user->email,
-                'avatar'        => $user->avatar,
+                'avatar'        => $user->avatar ? $user->avatar : NULL,
                 'provider'      => $provider,
                 'provider_id'   => $user->id,
                 'password'      => '12345678',
                 'confirm_password'=> '12345678'
             ];
 
-            $authUser = (object) RestCurl::exec('POST','http://localhost/svc-account/public/auth/register',$data);
-            return $authSession = (array) $authUser->data->data;
+            $authUser = (object) RestCurl::exec('POST',env('URL_SERVICE_ACCOUNT').'/auth/register',$data);
+            return $authSession = (object) $authUser->data->data;
         }
     }
 
@@ -89,7 +91,7 @@ class AuthController extends Controller
                 'password' => 12345678
                  );
             
-            $login =  (object) RestCurl::exec('POST','http://localhost/svc-account/public/auth/login',$param);
+            $login =  (object) RestCurl::exec('POST',env('URL_SERVICE_ACCOUNT').'/auth/login',$param);
 
             if ($login->status == 200 ) {
                 $loginSession = (array) $login->data->data;
@@ -106,7 +108,7 @@ class AuthController extends Controller
     {
         try {
             $token  = session()->get('access_token');
-            $r =  (object) RestCurl::exec('GET','http://localhost/svc-account/public/auth/logout',[],$token);
+            $r =  (object) RestCurl::exec('GET', env('URL_SERVICE_ACCOUNT').'/auth/logout',[],$token);
 
         } catch (\Exception $e) {
             return response()->json(Api::format('0',['message'=>$e->getMessage()],'Error'), 500);
