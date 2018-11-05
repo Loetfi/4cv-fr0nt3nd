@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
 use App\Http\Helpers\Api;
 use App\Http\Helpers\RestCurl;
 use App\Http\Controllers\Controller;

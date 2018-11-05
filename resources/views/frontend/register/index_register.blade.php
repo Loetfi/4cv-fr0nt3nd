@@ -25,35 +25,36 @@
                 <div class="col-md-6 col-md-offset-1 border-right">
                     <h3 class="text-center">Daftar Akun Baru</h3>
                     <div>
-                        <form>
+                        <form action="{{ url('register/store') }}" method="POST">
+                            @csrf
                             <fieldset>
                                 <div class="form-group">
                                     <div class="col-md-12">
-                                        <input id="firstname" name="firstname" placeholder="Nama Lengkap" class="form-control input-md" type="text">
+                                        <input id="fullname" name="fullname" placeholder="Nama Lengkap" class="form-control input-md" type="text">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-12">
-                                        <input id="firstname" name="firstname" placeholder="Email" class="form-control input-md" type="text">
+                                        <input id="email" name="email" placeholder="Email" class="form-control input-md" type="text">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-12 input-notification">
-                                        <input id="firstname" name="firstname" placeholder="Ext: 08197689999" class="form-control input-md" type="text"><span>Pastikan nomor yang anda masukan <strong>benar</strong>. Agar kami mudah melakukan verifikasi</span>
+                                        <input id="phone_number" name="phone_number" placeholder="Ext: 08197689999" class="form-control input-md" type="text"><span>Pastikan nomor yang anda masukan <strong>benar</strong>. Agar kami mudah melakukan verifikasi</span>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-12">
-                                        <input id="password" name="firstname" placeholder="Masukan Password" class="form-control input-md" type="password">
+                                        <input id="password" name="password" placeholder="Masukan Password" class="form-control input-md" type="password">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-12 input-notification">
-                                        <input id="firstname" name="firstname" placeholder="Ulangi kata sandi" class="form-control input-md" type="text"><span>Kata sandi tidak sama</span>
+                                        <input id="confirm_password" name="confirm_password" placeholder="Ulangi kata sandi" class="form-control input-md" type="password"><span>Kata sandi tidak sama</span>
                                     </div>
                                 </div>
                                 <div class="form-group text-center">
-                                    <button class="btn btn-info">Daftar Sekarang</button>
+                                    <button class="btn btn-info" type="submit" id="register">Daftar Sekarang</button>
                             </fieldset>
                         </form>
                         </div>

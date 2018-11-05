@@ -27,6 +27,8 @@ Route::group(['namespace'=>'Frontend'], function() {
 	});
 
 	Route::get('register','RegisterController@index');
+
+	Route::post('register/store','RegisterController@store');
 });
 
 Route::group(['namespace'=>'Auth'], function() {
