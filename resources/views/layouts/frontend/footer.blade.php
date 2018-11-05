@@ -1,3 +1,4 @@
+@if(Request::path() !=='/')
 <div class="cta-footer mt120">
     <div class="container">
         <div class="col-md-8">
@@ -9,6 +10,7 @@
         </div>
     </div>
 </div>
+@endif
 <footer>
     <div class="container">
         <div class="col-md-6">
