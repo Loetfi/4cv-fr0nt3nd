@@ -191,106 +191,59 @@
             </div>
         </div>
         
-        <!-- POPUP REGISTRATION -->
-        <!-- line modal -->
-        <div class="modal modal-registration fade mt60" id="ModalRegistration" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
-            <div class="modal-dialog w900">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
-                        <div class="col-md-6 p-info">
-                            <span class="overlay-medium-light">
-                                <p>" bergabunglah bersama komunitas otomotif dan percayakan inspeksi kendaraan anda bersama kami "</p>
-                            </span>
-                        </div>
-                        <div class="col-md-6 p25">
-                            <h3 class="text-center">Daftar Akun Baru</h3>
-                            <form class="form-default">
-                                <fieldset>
-                                    <div class="form-group">
-                                        <div class="col-md-12">
-                                            <input id="firstname" name="firstname" placeholder="Nama Lengkap" class="form-control input-md" type="text">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-md-12">
-                                            <input id="firstname" name="firstname" placeholder="Email" class="form-control input-md" type="text">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-md-12 input-notification">
-                                            <input id="firstname" name="firstname" placeholder="Ext: 08197689999" class="form-control input-md" type="text"><span>Pastikan nomor yang anda masukan <strong>benar</strong> agar mudah melakukan verifikasi</span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-md-12">
-                                            <input id="password" name="firstname" placeholder="Masukan Password" class="form-control input-md" type="password">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-md-12 input-notification">
-                                            <input id="firstname" name="firstname" placeholder="Ulangi kata sandi" class="form-control input-md" type="text"><span>Kata sandi tidak sama</span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group text-right">
-                                        <button class="btn btn-line-info">cancel</button>
-                                        <button class="btn btn-green">Daftar</button>   
-                                    </div>
-                                </fieldset>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         @guest
         <!-- POPUP LOGIN -->
         <!-- line modal -->
         <div class="modal modal-registration fade mt60" id="ModalLogin" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
-                        <div class="col-md-12 p25">
-                            <h3 class="text-center">Masuk Akun</h3>
-                            <form class="form-default">
-                                <fieldset>
-                                    <div class="form-group">
-                                        <div class="col-md-12">
-                                            <input id="firstname" name="firstname" placeholder="Nama Lengkap" class="form-control input-md" type="text">
+        <div class="modal-dialog">
+        <div class="modal-content bg-pattern-city">
+            <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <div class="col-md-12 p25">
+                    <div class="form-registration form-default">
+                        <div class="col-md-6">
+                            <h3 class="text-center mb30">Masuk Akun</h3>
+                            <div>
+                                <form action="{{ url('login') }}" method="POST">
+                                    <fieldset>
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                <input id="email" name="email" placeholder="email" class="form-control input-md" type="text">
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-md-12">
-                                            <input id="password" type="password" name="firstname" placeholder="Password" class="form-control input-md" type="text">
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                <input id="password" name="password" placeholder="password" type="password" class="form-control input-md" type="text">
+                                            </div>
                                         </div>
-                                    </div>
-
-                                    <div class="form-group text-left">
-                                    </div>
-
-                                    <div class="form-group text-right">
-                                        <div style="float:left!important">
-                                            <a href="{{ url('auth/google') }}" title="Login with google">
-                                                <i class="fa fa-google"></i>
-                                            </a>
-                                            <a href="{{ url('auth/facebook') }}" title="Login with facebook">
-                                                <i class="fa fa-facebook"></i>
-                                            </a>
-                                            <a href="">
-                                                <i class="fa fa-twitter"></i>
-                                            </a>
-                                            <a href="{{ url('auth/linkedin') }}" title="Login with linkedin">
-                                                <i class="fa fa-linkedin"></i>
-                                            </a>
-                                        </div>
-
-                                        <button class="btn btn-line-info">cancel</button>
-                                        <button class="btn btn-green">Daftar</button>   
-                                    </div>
-                                </fieldset>
-                            </form>
+                                        <div class="form-group text-center">
+                                            <button class="btn btn-info" type="submit">Masuk Sekarang</button>
+                                    </fieldset>
+                                </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-registration form-default">
+                            <div class="col-md-6 borer">
+                                <h3 class="text-center mb30">Gunakan Social Media</h3>
+                                <div>
+                                    <form>
+                                        <fieldset>
+                                            <div class="form-group">
+                                                <div class="login-socialmedia register-socialmedia">
+                                                    <a href="{{ url('auth/facebook') }}" class="login-facebook"><span class="ic ic-facebook"></span>Masuk via Facebook</a>
+                                                    <a href="{{ url('auth/twitter') }}" class="login-twitter"><span class="ic ic-twitter"></span>Masuk via Twitter</a>
+                                                    <a href="{{ url('auth/google') }}" class="login-google"><span class="ic ic-google"></span>Masuk via Google</a>
+                                                    <!--  <a href="//ibid.astra.co.id/omni/linkedin/linkedin/" class="login-linkedin"><span class="ic ic-linkedin"></span>Daftar via Linkedin</a> -->
+                                                </div>
+                                                <div class="text-center mt30 login-socialmedia-help">
+                                                    <p>belum punya akun? <a href="registration-page.html">Daftar disini</a></p>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

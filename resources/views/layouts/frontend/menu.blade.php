@@ -9,7 +9,7 @@
             <li><a href="contact-us.html">contact us</a></li>
             <li class="mt10"><span><a class="ctc" href="tel:0318711818"> 031-879 9999</a></span></li>
             <li><a href="#">Masuk</a></li>
-            <li><a data-toggle="modal" data-target="#ModalRegistration">Daftar</a></li>
+            <li><a href="{{ url('register') }}">Daftar</a></li>
         </ul>
     </div>
 </div>
@@ -35,14 +35,14 @@
                     <li class="smd"><a href="#" title=""><i class="fa fa-twitter" aria-hidden="true"></i></a></li> -->
                 @if(! session()->get('access_token'))
                     <li><a class="hover-cursor" data-toggle="modal" data-target="#ModalLogin">Masuk</a></li>
-                    <li><a class="hover-cursor" data-toggle="modal" data-target="#ModalRegistration">Daftar</a></li>
+                    <li><a class="hover-cursor" href="{{ url('register') }}">Daftar</a></li>
                 @else
                     <li class="nav-login">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                             {{ session()->get('user.FullName') }}</a>
                         <ul class="dropdown-menu">
                             <li><a href="#">Profile</a></li>
-                            <li><a href="http://localhost/svc-account/public/auth/logout">sign out</a>
+                            <li><a href="{{ url('logout') }}">sign out</a>
                         </ul>
                     </li>
                 @endif

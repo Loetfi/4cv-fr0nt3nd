@@ -6,6 +6,7 @@ use App\User;
 use App\Http\Helpers\Api;
 use App\Http\Helpers\RestCurl;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -29,7 +30,8 @@ class AuthController extends Controller
         
         // cek apakah user dengan email sosmed tsb sudah pernah ada atau belum.
         $authSession = $this->findOrCreateUser($user, $provider);
-        if (count($authSession) > 0) {
+        // if(count($authSession) > 0) {
+        if ($authSession) {
             // jika ada
             $param = array(
                 'email' => $authSession->Email,
@@ -71,7 +73,7 @@ class AuthController extends Controller
             $data = [
                 'fullname'      => $user->name,
                 'email'         => $user->email,
-                'avatar'        => $user->avatar ? $user->avatar : NULL,
+                'avatar'        => $user->avatar,
                 'provider'      => $provider,
                 'provider_id'   => $user->id,
                 'password'      => '12345678',
@@ -83,12 +85,13 @@ class AuthController extends Controller
         }
     }
 
-    public function login()
+    public function login(Request $request)
     {
+        dd($request->all());
         try {
             $param = array(
-                'email' => $user->email,
-                'password' => 12345678
+                'email' => $request->email,
+                'password' => $request->password,
                  );
             
             $login =  (object) RestCurl::exec('POST',env('URL_SERVICE_ACCOUNT').'/auth/login',$param);
@@ -100,7 +103,7 @@ class AuthController extends Controller
                 return redirect('/');
             }
         } catch (\Exception $e) {
-            return response()->json(Api::format('0',['message'=>$e->getMessage()],'Error'), 500);
+            return response()->json(Api::format('0',[],$e->getMessage()), 500);
         }
     }
 
@@ -109,11 +112,13 @@ class AuthController extends Controller
         try {
             $token  = session()->get('access_token');
             $r =  (object) RestCurl::exec('GET', env('URL_SERVICE_ACCOUNT').'/auth/logout',[],$token);
+            // dd($r);
 
         } catch (\Exception $e) {
-            return response()->json(Api::format('0',['message'=>$e->getMessage()],'Error'), 500);
+            return response()->json(Api::format('0',[],$e->getMessage()), 500);
         }
-
-        return response()->json(Api::format('1',['message'=> $r->message], 'Success'),200);
+        // session()->flash('status', 'Silahkan coba kembali.');
+        session()->flush();
+        return redirect('/');
     }   
 }

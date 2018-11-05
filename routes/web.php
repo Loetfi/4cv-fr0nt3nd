@@ -20,21 +20,32 @@ Route::group(['namespace'=>'Frontend'], function() {
 	Route::get('faq','FaqController@index');
 
 	Route::get('contact-us','ContactController@index');
-
+	
 	Route::group(['middleware'=>'check-access'], function() {
 
 		Route::get('profile','ProfileController@index');
+	});
+
+	Route::get('register','RegisterController@index');
+});
+
+Route::group(['namespace'=>'Auth'], function() {
+
+	Route::post('login','AuthController@login');
+
+	Route::group(['middleware'=>'check-access'], function() {
 
 		Route::get('logout','AuthController@logout');
 	});
+
+	// socialite
+	Route::get('auth/{provider}', 'AuthController@redirectToProvider');
+	Route::get('auth/{provider}/callback', 'AuthController@handleProviderCallback');
 });
 
 // Auth::routes();
 
 Route::get('home', 'HomeController@index')->name('home');
-// socialite
-Route::get('auth/{provider}', 'Auth\AuthController@redirectToProvider');
-Route::get('auth/{provider}/callback', 'Auth\AuthController@handleProviderCallback');
 
 Route::get('test_conn_pgsql', 'HomeController@test_conn_pgsql');
 
