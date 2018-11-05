@@ -87,7 +87,6 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        dd($request->all());
         try {
             $param = array(
                 'email' => $request->email,
@@ -95,11 +94,13 @@ class AuthController extends Controller
                  );
             
             $login =  (object) RestCurl::exec('POST',env('URL_SERVICE_ACCOUNT').'/auth/login',$param);
-
             if ($login->status == 200 ) {
                 $loginSession = (array) $login->data->data;
-                session(['user' => $loginSession]);
+                session(['access_token' => $loginSession['access_token'] ]);
+                // session()->flash('status', 'Silahkan coba kembali.');
+                return redirect('profile');
             } else {
+                // session()->flash('status', 'Silahkan coba kembali.');
                 return redirect('/');
             }
         } catch (\Exception $e) {

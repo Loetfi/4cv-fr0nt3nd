@@ -33,6 +33,9 @@
         <meta name="twitter:description" content="">
         <meta name="twitter:image:src" content="">
 
+        <!-- token -->
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+
         <link href="{{ asset('frontend/css/bootstrap.css') }}" rel="stylesheet">
         <link href="{{ asset('frontend/css/style.css') }}" rel="stylesheet">
         <link href="{{ asset('frontend/css/jquery.fatNav.css') }}" rel="stylesheet" type="text/css">
@@ -205,6 +208,7 @@
                             <h3 class="text-center mb30">Masuk Akun</h3>
                             <div>
                                 <form action="{{ url('login') }}" method="POST">
+                                    @csrf
                                     <fieldset>
                                         <div class="form-group">
                                             <div class="col-md-12">
