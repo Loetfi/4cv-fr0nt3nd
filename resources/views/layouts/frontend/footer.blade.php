@@ -1,3 +1,14 @@
+<div class="cta-footer mt120">
+    <div class="container">
+        <div class="col-md-8">
+            <h2>Ketahui kondisi kendaraan idaman Anda bersama Astra Car Valuation</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur</p>
+        </div>
+        <div class="col-md-4 text-center">
+            <a href="#" class="btn-green mt5" data-toggle="modal" data-target="#ModalBooking">Booking inspection</a>       
+        </div>
+    </div>
+</div>
 <footer>
     <div class="container">
         <div class="col-md-6">
