@@ -7,7 +7,7 @@
     <div class="am-header">
         <div class="container">
             <div class="col-md-3">
-                <span class="avatar"><img src="img/avatar.png" class="img-responsive"></span>
+                <span class="avatar"><img src="{{ session()->get('user.Avatar') }}" class="img-responsive"></span>
             </div>
             <div class="col-md-9 prof-info">
                 <h3>Jhon Doe Nabumi</h3>
