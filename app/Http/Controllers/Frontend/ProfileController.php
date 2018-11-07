@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 
 class ProfileController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     { 
     	// panggil session jika ingin attribute user
     	return view('frontend.profile.index_profile');

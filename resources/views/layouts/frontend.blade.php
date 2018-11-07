@@ -43,6 +43,7 @@
         <link href="{{ asset('frontend/css/slick-theme.css') }}" rel="stylesheet" type="text/css">
         <link href="{{ asset('frontend/css/respond.css') }}" rel="stylesheet">
         <link href="{{ asset('frontend/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" rel="stylesheet" type="text/css">
         
         @yield('css')
     </head>
@@ -207,24 +208,24 @@
                         <div class="col-md-6">
                             <h3 class="text-center mb30">Masuk Akun</h3>
                             <div>
-                                <form action="{{ url('login') }}" method="POST">
+                                <form id="frm-login" method="POST">
                                     @csrf
                                     <fieldset>
                                         <div class="form-group">
                                             <div class="col-md-12">
-                                                <input id="email" name="email" placeholder="email" class="form-control input-md" type="text">
+                                                <input id="email" name="email" placeholder="email" class="form-control input-md" type="text" required>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-md-12">
-                                                <input id="password" name="password" placeholder="password" type="password" class="form-control input-md" type="text">
+                                                <input id="password" name="password" placeholder="password" type="password" class="form-control input-md" type="text" required>
                                             </div>
                                         </div>
                                         <div class="form-group text-center">
-                                            <button class="btn btn-info" type="submit">Masuk Sekarang</button>
+                                            <button class="btn btn-info" type="submit" id="btn-login">Masuk Sekarang</button>
+                                        </div>
                                     </fieldset>
                                 </form>
-                                </div>
                             </div>
                         </div>
                         <div class="form-registration form-default">
@@ -258,14 +259,49 @@
         @endguest
 
         <!-- Dragable Testimonial Section -->
-        <script src="{{ asset('frontend/js/jquery-2.2.0.min.js') }}" type="text/javascript"></script>
-        <script src="{{ asset('frontend/js/slick.js') }}" type="text/javascript" charset="utf-8"></script>
+        <script src="{{ asset('frontend/js/jquery-2.2.0.min.js') }}"></script>
+        <script src="{{ asset('frontend/js/slick.js') }}"></script>
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="{{ asset('frontend/js/jquery.min.js') }}"></script>
         <script src="{{ asset('frontend/js/bootstrap.min.js') }}"></script>
-        <script src="{{ asset('frontend/js/parallax.js') }}" type="text/javascript"></script>
+        <script src="{{ asset('frontend/js/parallax.js') }}"></script>
         <script src="{{ asset('frontend/js/wow.js') }}"></script>
         <script src="{{ asset('frontend/js/jquery.fatNav.js') }}"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+        <script>
+            $(document).ready(function() {
+                $.ajaxSetup({
+                  headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                  }
+                });
+
+                $('#btn-login').on('click', function(e) {
+                    e.preventDefault();
+                    // console.log($('frm-login').serialize());
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ url("login")}}',
+                        dataType: "json",
+                        data: $('#frm-login').serialize(),
+                        beforeSend: function (r) {
+                        },
+                        success: function(r) {
+                            if(r.status == 1) {
+                                toastr.success('Success login', 'Success', {timeOut: 2000})
+                                setTimeout(function() {
+                                    window.location.href = '{{ url("profile") }}';  
+                                }, 2500);
+                            } else {
+                                toastr.error('Your email or password wrong', 'Error', {timeOut: 2000});                        
+                            }
+                        },
+                        error: function(r) {}
+                    });
+                });
+            });
+        </script>
         
         @yield('script')
     

@@ -93,14 +93,15 @@ class AuthController extends Controller
                  );
             
             $login =  (object) RestCurl::exec('POST',env('URL_SERVICE_ACCOUNT').'/auth/login',$param);
+            // dd($login);
             if ($login->status == 200 ) {
                 $loginSession = (array) $login->data->data;
                 session(['access_token' => $loginSession['access_token'] ]);
                 // session()->flash('status', 'Silahkan coba kembali.');
-                return redirect('profile');
+                // return redirect('profile');
+                return response()->json(Api::format(1,[],'Success login'), 200);
             } else {
-                // session()->flash('status', 'Silahkan coba kembali.');
-                return redirect('/');
+                return response()->json(Api::format(0,[],'Your email or password wrong'), 200);
             }
         } catch (\Exception $e) {
             return response()->json(Api::format('0',[],$e->getMessage()), 500);
