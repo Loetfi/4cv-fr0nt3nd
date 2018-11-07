@@ -268,6 +268,8 @@
         <script src="{{ asset('frontend/js/wow.js') }}"></script>
         <script src="{{ asset('frontend/js/jquery.fatNav.js') }}"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+        @guest
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
 
         <script>
             $(document).ready(function() {
@@ -276,33 +278,58 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                   }
                 });
-
-                $('#btn-login').on('click', function(e) {
-                    e.preventDefault();
-                    // console.log($('frm-login').serialize());
-                    $.ajax({
-                        type: 'POST',
-                        url: '{{ url("login")}}',
-                        dataType: "json",
-                        data: $('#frm-login').serialize(),
-                        beforeSend: function (r) {
+                jQuery(function($) {
+                    $.validator.setDefaults({
+                        errorClass: 'help-block',
+                        highlight: function(element) {
+                            $(element)
+                                .closest('.form-group')
+                                .addClass('has-error');
                         },
-                        success: function(r) {
-                            if(r.status == 1) {
-                                toastr.success('Success login', 'Success', {timeOut: 2000})
-                                setTimeout(function() {
-                                    window.location.href = '{{ url("profile") }}';  
-                                }, 2500);
-                            } else {
-                                toastr.error('Your email or password wrong', 'Error', {timeOut: 2000});                        
+                        unhighlight: function(element) {
+                            $(element)
+                                .closest('.form-group')
+                                .removeClass('has-error')
+                                .addClass('has-success');
+                        }
+                    });
+
+                    $('#frm-login').validate({
+                        rules: {
+                            email: {
+                                required: true
+                            },
+                            password: {
+                                required: true
                             }
                         },
-                        error: function(r) {}
+                        submitHandler: function(form) {
+                            $.ajax({
+                                type: 'POST',
+                                url: '{{ url("login")}}',
+                                dataType: "json",
+                                data: $('#frm-login').serialize(),
+                                beforeSend: function (r) {
+                                },
+                                success: function(r) {
+                                    if(r.status == 1) {
+                                        toastr.success('Success login', 'Success', {timeOut: 2000})
+                                        setTimeout(function() {
+                                            window.location.href = '{{ url("profile") }}';  
+                                        }, 2500);
+                                    } else {
+                                        toastr.error('Your email or password wrong', 'Error', {timeOut: 2000});                        
+                                    }
+                                },
+                                error: function(r) {}
+                            });
+                        }
                     });
                 });
             });
         </script>
-        
+        @endguest
+
         @yield('script')
     
     </body>

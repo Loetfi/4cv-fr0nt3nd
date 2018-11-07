@@ -23,18 +23,22 @@ class CheckAccess
             // $token = $tokens->access_token;
 
             $r =  (object) RestCurl::exec('GET',env('URL_SERVICE_ACCOUNT').'/auth/check-token',[],$token);
-
+            // dd($r);
             if($r->status == 200 and $r->data->message == 'valid_token')
             {
                 response()->json(Api::format($r->data->status,[$r->data->data],$r->data->message), 200);
 
             } 
-            elseif($r->data->message == 'refresh_token') // refresh_token 
+            else if($r->data->message == 'refresh_token') // refresh_token 
             {   
 
                 $refresh_token = $r->data->data->refresh_token;
                 $r =  (object) RestCurl::exec('GET',env('URL_SERVICE_ACCOUNT').'/auth/check-token',[],$refresh_token);
                 $request->session()->put('access_token', $refresh_token);
+            } 
+            else if($r->data->status !== 1 ) 
+            {
+                return redirect('/');
             }   
         
         } catch (\Exception $e) {
