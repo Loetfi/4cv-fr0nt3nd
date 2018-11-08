@@ -51,7 +51,7 @@ class RegisterController extends Controller
                 'to'  => $to_email
             ];
 
-            $notif_email = (object) RestCurl::exec('POST',env('URL_SERVICE_NOTIF').'/send-email', $data_email);
+            // $notif_email = (object) RestCurl::exec('POST',env('URL_SERVICE_NOTIF').'/send-email', $data_email);
             
             // dd($notif_email);
 
