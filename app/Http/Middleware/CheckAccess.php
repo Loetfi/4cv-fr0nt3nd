@@ -36,7 +36,7 @@ class CheckAccess
                 $r =  (object) RestCurl::exec('GET',env('URL_SERVICE_ACCOUNT').'/auth/check-token',[],$refresh_token);
                 $request->session()->put('access_token', $refresh_token);
             } 
-            else if($r->data->status !== 1 ) 
+            else if($r->data->status !== 1 ) // redirect if user access url 
             {
                 return redirect('/');
             }   

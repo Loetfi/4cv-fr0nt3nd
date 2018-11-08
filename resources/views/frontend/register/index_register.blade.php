@@ -25,7 +25,7 @@
                 <div class="col-md-6 col-md-offset-1 border-right">
                     <h3 class="text-center">Daftar Akun Baru</h3>
                     <div>
-                        <form action="{{ url('register/store') }}" method="POST">
+                        <form id="frm-register">
                             @csrf
                             <fieldset>
                                 <div class="form-group">
@@ -54,7 +54,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group text-center">
-                                    <button class="btn btn-info" type="submit" id="register">Daftar Sekarang</button>
+                                    <button class="btn btn-info" type="submit" id="btn-register">Daftar Sekarang</button>
                             </fieldset>
                         </form>
                         </div>
@@ -151,5 +151,68 @@
     $(window).load(function() {
       $(".preloader").delay(100).fadeOut("slow");
     })
+</script>
+<!-- jquery validate -->
+<script>
+$(document).ready(function() {
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+    jQuery(function($) {
+        $.validator.setDefaults({
+            errorClass: 'help-block',
+            highlight: function(element) {
+                $(element)
+                    .closest('.form-group')
+                    .addClass('has-error');
+            },
+            unhighlight: function(element) {
+                $(element)
+                    .closest('.form-group')
+                    .removeClass('has-error')
+                    .addClass('has-success');
+            }
+        });
+
+        $('#frm-register').validate({
+            rules: {
+                email: {
+                    required: true
+                },
+                fullname: {
+                    required: true
+                },
+                phone_number: {
+                    required: true,
+                    number: true
+                },
+                password: {
+                    required: true,
+                    minlength: 6,
+                    maxlength: 12,
+                },
+                confirm_password: {
+                    equalTo: "#password",
+                }
+            },
+            submitHandler: function(form) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url("register/store")}}',
+                    dataType: "json",
+                    data: $('#frm-register').serialize(),
+                    beforeSend: function (r) {
+                    },
+                    success: function(r) {
+                        console.log(r);
+                    },
+                    error: function(r) {}
+                });
+            }
+        });
+    });
+});
 </script>
 @endsection

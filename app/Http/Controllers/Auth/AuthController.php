@@ -6,7 +6,6 @@ use App\Http\Helpers\Api;
 use App\Http\Helpers\RestCurl;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
@@ -34,7 +33,7 @@ class AuthController extends Controller
             // jika ada
             $param = array(
                 'email' => $authSession->Email,
-                'password' => 12345678
+                'password' => '4cv-p44sw0rd'
                  );
             // maka diloginkan langsung
             $login = (object) RestCurl::exec('POST',env('URL_SERVICE_ACCOUNT').'/auth/login',$param);
@@ -75,8 +74,9 @@ class AuthController extends Controller
                 'avatar'        => $user->avatar,
                 'provider'      => $provider,
                 'provider_id'   => $user->id,
-                'password'      => '12345678',
-                'confirm_password'=> '12345678'
+                'password'      => '4cv-p44sw0rd',
+                'confirm_password'=> '4cv-p44sw0rd',
+                'is_active'     => 1
             ];
 
             $authUser = (object) RestCurl::exec('POST',env('URL_SERVICE_ACCOUNT').'/auth/register',$data);
@@ -84,6 +84,11 @@ class AuthController extends Controller
         }
     }
 
+    /**
+    * @param email required
+    * @param password required
+    * @return json success login, your account its not active, email or password wrong
+    */
     public function login(Request $request)
     {
         try {
@@ -93,18 +98,22 @@ class AuthController extends Controller
                  );
             
             $login =  (object) RestCurl::exec('POST',env('URL_SERVICE_ACCOUNT').'/auth/login',$param);
-            // dd($login);
+            // dd($login->data->message);
             if ($login->status == 200 ) {
+                // success login
                 $loginSession = (array) $login->data->data;
                 session(['access_token' => $loginSession['access_token'] ]);
-                // session()->flash('status', 'Silahkan coba kembali.');
-                // return redirect('profile');
-                return response()->json(Api::format(1,[],'Success login'), 200);
+                return response()->json(Api::format('1',[],'Success login'), 200);
+            
             } else {
-                return response()->json(Api::format(0,[],'Your email or password wrong'), 200);
+                // 2 condition, account not active or password wrong
+                return response()->json(Api::format('0',[],$login->data->message), 200);
+            
             }
         } catch (\Exception $e) {
+
             return response()->json(Api::format('0',[],$e->getMessage()), 500);
+        
         }
     }
 

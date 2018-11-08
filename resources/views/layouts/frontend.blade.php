@@ -318,10 +318,12 @@
                                             window.location.href = '{{ url("profile") }}';  
                                         }, 2500);
                                     } else {
-                                        toastr.error('Your email or password wrong', 'Error', {timeOut: 2000});                        
+                                        toastr.error(r.message,'Error', {timeOut: 3000});                        
                                     }
                                 },
-                                error: function(r) {}
+                                error: function(r) {
+                                    toastr.error('Whoops, something went wrong','Error', {timeOut: 3000});
+                                }
                             });
                         }
                     });
