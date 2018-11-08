@@ -34,8 +34,8 @@
                     <li class="smd"><a href="#" title=""><i class="fa fa-google-plus" aria-hidden="true"></i></a></li>
                     <li class="smd"><a href="#" title=""><i class="fa fa-twitter" aria-hidden="true"></i></a></li> -->
                 @if(! session()->get('access_token'))
-                    <li><a class="hover-cursor" data-toggle="modal" data-target="#ModalLogin">Masuk</a></li>
-                    <li><a class="hover-cursor" href="{{ url('register') }}">Daftar</a></li>
+                    <li><a class="hover-cursor" data-toggle="modal" data-target="#ModalLogin" id="menu_masuk">Masuk</a></li>
+                    <li><a class="hover-cursor" href="{{ url('register') }}" id="menu_daftar">Daftar</a></li>
                 @else
                     <li class="nav-login">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
