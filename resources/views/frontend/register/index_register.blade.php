@@ -155,11 +155,6 @@
 <!-- jquery validate -->
 <script>
 $(document).ready(function() {
-    $.ajaxSetup({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-    });
     jQuery(function($) {
         $.validator.setDefaults({
             errorClass: 'help-block',
@@ -194,6 +189,7 @@ $(document).ready(function() {
                     maxlength: 12,
                 },
                 confirm_password: {
+                    required: true,
                     equalTo: "#password",
                 }
             },
@@ -207,8 +203,19 @@ $(document).ready(function() {
                     },
                     success: function(r) {
                         console.log(r);
+                        if(r.status == 1) {
+                            toastr.success(r.message,'Success Register', {timeOut: 3000});
+
+                            setTimeout(function() {
+                                window.location.href = '{{ url("/") }}';  
+                            }, 4000);
+                        } else {
+                            toastr.error(r.message,'Error', {timeOut: 3000});
+                        }
                     },
-                    error: function(r) {}
+                    error: function(r) {
+                        toastr.error('Whoops, something went wrong','Error', {timeOut: 3000});
+                    }
                 });
             }
         });
