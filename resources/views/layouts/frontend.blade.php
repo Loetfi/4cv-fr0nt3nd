@@ -313,10 +313,10 @@
                                 },
                                 success: function(r) {
                                     if(r.status == 1) {
-                                        toastr.success('Success login', 'Success', {timeOut: 2000});
-                                        setTimeout(function() {
-                                            window.location.href = '{{ url("profile") }}';  
-                                        }, 2500);
+                                        // toastr.success('Success login', 'Success', {timeOut: 2000});
+                                        // setTimeout(function() {
+                                            window.location.href = '{{ url("/") }}';  
+                                        // }, 2500);
                                     } else {
                                         toastr.error(r.message,'Error', {timeOut: 3000});                        
                                     }

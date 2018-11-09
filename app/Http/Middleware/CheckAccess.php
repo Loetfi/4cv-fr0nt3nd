@@ -46,7 +46,7 @@ class CheckAccess
         }
         
         // set session
-        session(['user' => (array) $r->data->data]);
+        // session(['user' => (array) $r->data->data]);
 
         return $next($request);
     }

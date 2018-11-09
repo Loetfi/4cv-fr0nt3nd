@@ -34,21 +34,29 @@ class AuthController extends Controller
             $param = array(
                 'email' => $authSession->Email,
                 'password' => '4cv-p44sw0rd'
-                 );
+            );
             // maka diloginkan langsung
             $login = (object) RestCurl::exec('POST',env('URL_SERVICE_ACCOUNT').'/auth/login',$param);
-
+            
             if ($login->status == 200 ) {
-                $loginSession = (array) $login->data->data;
                 // dijadikan ke session dengan array user
-                session(['access_token' => $loginSession['access_token'] ]);
+                $access_token = $login->data->data->access_token;
+                
+                $r =  (object) RestCurl::exec('GET',env('URL_SERVICE_ACCOUNT').'/auth/check-token',[],$access_token);
+
+                session([
+                    'access_token' => $access_token,
+                    'user' => (array) $r->data->data
+                ]);
+
+                session()->flash('flash_notification',['type'=>'success','message'=>'Berhasil Login']);
+                return redirect('/');
+
             } else {
                 $request->session()->flash('status', 'Silahkan coba kembali.');
                 return redirect('/');
             }
         }
-
-        return redirect('profile');
     }
 
     /**
@@ -95,16 +103,23 @@ class AuthController extends Controller
             $param = array(
                 'email' => $request->email,
                 'password' => $request->password,
-                 );
+            );
             
             $login =  (object) RestCurl::exec('POST',env('URL_SERVICE_ACCOUNT').'/auth/login',$param);
             // dd($login->data->message);
             if ($login->status == 200 ) {
                 // success login
-                $loginSession = (array) $login->data->data;
-                session(['access_token' => $loginSession['access_token'] ]);
+                $access_token = $login->data->data->access_token;
+                $r =  (object) RestCurl::exec('GET',env('URL_SERVICE_ACCOUNT').'/auth/check-token',[],$access_token);
+
+                session([
+                    'access_token'=>$access_token,
+                    'user' => (array) $r->data->data
+                ]);
+                
+                session()->flash('flash_notification',['type'=>'success','message'=>'Berhasil login']);
+
                 return response()->json(Api::format('1',[],'Success login'), 200);
-            
             } else {
                 // 2 condition, account not active or password wrong
                 return response()->json(Api::format('0',[],$login->data->message), 200);

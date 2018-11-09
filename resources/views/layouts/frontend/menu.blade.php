@@ -41,7 +41,7 @@
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                             {{ session()->get('user.FullName') }}</a>
                         <ul class="dropdown-menu">
-                            <li><a href="#">Profile</a></li>
+                            <li><a href="{{ url('profile') }}">Profile</a></li>
                             <li><a href="{{ url('logout') }}">sign out</a>
                         </ul>
                     </li>

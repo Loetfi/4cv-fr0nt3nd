@@ -20,7 +20,7 @@ class RegisterController extends Controller
     * @param email unique
     * @param password min 6, ConfirmPassword same Password
     * @param phone_number numeric
-    * @return success redirect('profile')
+    * @return success redirect('/')
     */
     public function store(Request $request)
     {
