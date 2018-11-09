@@ -50,6 +50,14 @@
 	        <span class="sr-only">Next</span>
 	        </a>
 	    </div>
+
+	    @if (session()->has('flash_notification.message'))
+		  	<div class="alert alert-{{ session()->get('flash_notification.type') }} alert-dismissible">
+		    	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		    	{!! session()->get('flash_notification.message') !!}
+		  	</div>
+		@endif
+
 	</header>
 
 	<section class="about-us">
@@ -275,6 +283,21 @@
 	        </div>
 	    </div>
 	</section>
+
+<!--
+<style>
+#sanusiCoba{
+	background: red;
+	border: 5px solid black;
+	border-radius: 5px;
+	position: absolute;
+	margin: 20px auto;
+	height: 100px;
+}
+</style>
+	 <div id="sanusiCoba">
+		tulisannya ada disini
+	</div> -->
 @endsection
 
 @section('script')

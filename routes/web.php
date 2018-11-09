@@ -31,7 +31,7 @@ Route::group(['namespace'=>'Frontend'], function() {
 	Route::post('register/store','RegisterController@store');
 
 	// hash email and time
-	Route::get('user/active-account/{hash}','RegisterController@activeAccount');
+	Route::get('register/active-account/{hash}','RegisterController@activeAccount');
 });
 
 Route::group(['namespace'=>'Auth'], function() {

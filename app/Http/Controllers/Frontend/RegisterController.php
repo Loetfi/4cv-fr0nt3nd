@@ -43,19 +43,19 @@ class RegisterController extends Controller
             $to_email = $user->data->data->Email;
             $time = Carbon::now()->addDays(3);
 
-            $to_email_time = base64_encode($to_email.'|'.$time);
+            $to_email_time = urlencode(encrypt($to_email.'|'.$time));
 
             $data_email = [
                 'body'  => 'Berikut adalah link untuk mengaktifkan account anda, dengan waktu 3 hari setelah register '
-                            . ENV('APP_URL') . '/user/active-account/'. $to_email_time ,
+                            . ENV('APP_URL') . '/register/active-account/'. $to_email_time ,
                 'to'  => $to_email
             ];
 
-            // $notif_email = (object) RestCurl::exec('POST',env('URL_SERVICE_NOTIF').'/send-email', $data_email);
+            $notif_email = (object) RestCurl::exec('POST',env('URL_SERVICE_NOTIF').'/send-email', $data_email);
             
             // dd($notif_email);
 
-            session()->flash('success_register','Please check your email to active account');
+            session()->flash('flash_notification',['type'=>'success','message'=>'Cek email anda untuk aktivasi account']);
 
             return response()->json(Api::format(1,[],'Please check your email to active account'), 200);
         }
@@ -63,6 +63,35 @@ class RegisterController extends Controller
 
     public function activeAccount($hash)
     {
-        dd(ENV('APP_URL'));
+        // dd(urldecode(decrypt($hash)));
+        try {
+            if(urldecode(decrypt($hash)) === '') { // hash hasilnya ''  redirect('/')
+                session()->flash('flash_notification',['type'=>'error','message'=>'Terjadi kesalahan sistem, cobalah beberapa saat lagi']);
+                return redirect('/');
+            } else { // hash hasilnya email|jam
+                $explode = explode('|', urldecode(decrypt($hash)));
+                $email = $explode[0];
+                $time = $explode[1];
+                if($time > Carbon::now()) { // time hash > time sekarang
+                    // update IsActive 0 to 1
+                    $user = (object) RestCurl::exec('POST',env('URL_SERVICE_ACCOUNT').'/auth/register/active-account',
+                            ['is_active'=> '1','email'=>$email]);
+                    // dd($user);
+                    if($user->status == 200) {
+                        session()->flash('flash_notification',['type'=>'success','message'=>'Aktivasi akun berhasil, silahkan login']);
+                        return redirect('/');
+                    } else {                 
+                        session()->flash('flash_notification',['type'=>'error','message'=>'Terjadi kesalahan sistem, cobalah beberapa saat lagi']);
+                        return redirect('/');       
+                    }
+                } else {
+                    // page insert email untuk kirim url baru active user
+                    return 'kirim ke page input email lagi buat dikirimin link baru '. Carbon::now() . $explode[1];
+                }
+            }
+        } catch (\Exception $e) {
+            session()->flash('flash_notification',['type'=>'error','message'=>'Terjadi kesalahan sistem, cobalah beberapa saat lagi']);
+            return redirect('/');
+        }
     }
 }

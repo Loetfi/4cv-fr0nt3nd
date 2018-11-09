@@ -204,11 +204,11 @@ $(document).ready(function() {
                     success: function(r) {
                         console.log(r);
                         if(r.status == 1) {
-                            toastr.success(r.message,'Success Register', {timeOut: 3000});
+                            // toastr.success(r.message,'Success Register', {timeOut: 3000});
 
-                            setTimeout(function() {
+                            // setTimeout(function() {
                                 window.location.href = '{{ url("/") }}';  
-                            }, 4000);
+                            // }, 4000);
                         } else {
                             toastr.error(r.message,'Error', {timeOut: 3000});
                         }

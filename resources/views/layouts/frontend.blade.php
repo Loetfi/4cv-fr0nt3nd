@@ -51,7 +51,7 @@
         <div class="preloader"></div>
         
         @include('layouts.frontend.menu')
-        
+
         @yield('content')
         
         @include('layouts.frontend.footer')
@@ -313,7 +313,7 @@
                                 },
                                 success: function(r) {
                                     if(r.status == 1) {
-                                        toastr.success('Success login', 'Success', {timeOut: 2000})
+                                        toastr.success('Success login', 'Success', {timeOut: 2000});
                                         setTimeout(function() {
                                             window.location.href = '{{ url("profile") }}';  
                                         }, 2500);
