@@ -30,8 +30,11 @@ Route::group(['namespace'=>'Frontend'], function() {
 
 	Route::post('register/store','RegisterController@store');
 
-	// hash email and time
-	Route::get('register/active-account/{hash}','RegisterController@activeAccount');
+	Route::get('register/active-account/{hash}','RegisterController@activeAccount'); // hash email and time
+
+	Route::get('register/resend-link-page/{hash}','RegisterController@resendLinkPage');
+
+	Route::post('register/send-link','RegisterController@sendLink');
 });
 
 Route::group(['namespace'=>'Auth'], function() {

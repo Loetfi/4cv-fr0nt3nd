@@ -43,15 +43,7 @@ class RegisterController extends Controller
             $to_email = $user->data->data->Email;
             $time = Carbon::now()->addDays(3);
 
-            $to_email_time = urlencode(encrypt($to_email.'|'.$time));
-
-            $data_email = [
-                'body'  => 'Berikut adalah link untuk mengaktifkan account anda, dengan waktu 3 hari setelah register '
-                            . ENV('APP_URL') . '/register/active-account/'. $to_email_time ,
-                'to'  => $to_email
-            ];
-
-            $notif_email = (object) RestCurl::exec('POST',env('URL_SERVICE_NOTIF').'/send-email', $data_email);
+            $this->SendEmail($to_email,$time);
             
             // dd($notif_email);
 
@@ -63,7 +55,7 @@ class RegisterController extends Controller
 
     public function activeAccount($hash)
     {
-        // dd(urldecode(decrypt($hash)));
+        // dd(urldecode(decrypt($hash)).' '.Carbon::now());
         try {
             if(urldecode(decrypt($hash)) === '') { // hash hasilnya ''  redirect('/')
                 session()->flash('flash_notification',['type'=>'error','message'=>'Terjadi kesalahan sistem, cobalah beberapa saat lagi']);
@@ -86,12 +78,54 @@ class RegisterController extends Controller
                     }
                 } else {
                     // page insert email untuk kirim url baru active user
-                    return 'kirim ke page input email lagi buat dikirimin link baru '. Carbon::now() . $explode[1];
+                    return redirect('register/resend-link-page/'.$hash);
                 }
             }
         } catch (\Exception $e) {
             session()->flash('flash_notification',['type'=>'error','message'=>'Terjadi kesalahan sistem, cobalah beberapa saat lagi']);
             return redirect('/');
         }
+    }
+
+    public function resendLinkPage($hash)
+    {
+        $data['hash'] = $hash;
+        return view('frontend.register.f_send_link',$data);
+    }
+
+    public function sendLink(Request $request)
+    {
+        // dd($request->all());
+        $explode = explode('|', urldecode(decrypt($request->hash)));
+        
+        if($explode[0] == $request->email) {
+            
+            $time = Carbon::now()->addDays(3);
+            $to_email = $request->email;
+            
+            $this->sendEmail($to_email, $time);
+
+            session()->flash('flash_notification',['type'=>'success','message'=>'Link aktivasi telah dikirim ulang, silahkan periksa kembali email anda']);
+            
+            return response()->json(Api::format('1',[],'Link aktivasi telah dikirim ulang, silahkan periksa kembali email anda'), 200);
+        } else {
+            
+            return response()->json(Api::format('0',[],'Email tidak valid'), 200);
+
+        }
+    }
+
+    public function sendEmail($to_email, $time) 
+    {
+        $to_email_time = urlencode(encrypt($to_email.'|'.$time));
+
+        $data_email = [
+            'body'  => 'Berikut adalah link untuk mengaktifkan account anda, dengan waktu 3 hari setelah register '
+                        . ENV('APP_URL') . '/register/active-account/'. $to_email_time ,
+            'to'  => $to_email
+        ];
+
+        $notif_email = (object) RestCurl::exec('POST',env('URL_SERVICE_NOTIF').'/send-email', $data_email);
+        return $notif_email;
     }
 }

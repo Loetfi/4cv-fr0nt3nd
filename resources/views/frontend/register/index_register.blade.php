@@ -97,9 +97,6 @@
     (function() {
         $.fatNav();
     }());
-</script> 
-<script>
-    new WOW().init();
 </script>
 <script>
     function toggleChevron(e) {
@@ -174,7 +171,8 @@ $(document).ready(function() {
         $('#frm-register').validate({
             rules: {
                 email: {
-                    required: true
+                    required: true,
+                    email: true
                 },
                 fullname: {
                     required: true
@@ -202,7 +200,7 @@ $(document).ready(function() {
                     beforeSend: function (r) {
                     },
                     success: function(r) {
-                        console.log(r);
+                        // console.log(r);
                         if(r.status == 1) {
                             // toastr.success(r.message,'Success Register', {timeOut: 3000});
 
