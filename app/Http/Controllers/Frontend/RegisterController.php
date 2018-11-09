@@ -42,8 +42,9 @@ class RegisterController extends Controller
             // success insert and send email
             $to_email = $user->data->data->Email;
             $time = Carbon::now()->addDays(3);
+            $subject = 'Astra Car Valuation (ACV) | Link Aktivasi Akun';
 
-            $this->SendEmail($to_email,$time);
+            $this->SendEmail($to_email,$time,$subject);
             
             // dd($notif_email);
 
@@ -102,8 +103,9 @@ class RegisterController extends Controller
             
             $time = Carbon::now()->addDays(3);
             $to_email = $request->email;
+            $subject = 'Astra Car Valuation (ACV) | Link Aktivasi Akun';
             
-            $this->sendEmail($to_email, $time);
+            $this->sendEmail($to_email, $time, $subject);
 
             session()->flash('flash_notification',['type'=>'success','message'=>'Link aktivasi telah dikirim ulang, silahkan periksa kembali email anda']);
             
@@ -115,14 +117,15 @@ class RegisterController extends Controller
         }
     }
 
-    public function sendEmail($to_email, $time) 
+    public function sendEmail($to_email, $time, $subject = false) 
     {
         $to_email_time = urlencode(encrypt($to_email.'|'.$time));
 
         $data_email = [
             'body'  => 'Berikut adalah link untuk mengaktifkan account anda, dengan waktu 3 hari setelah register '
                         . ENV('APP_URL') . '/register/active-account/'. $to_email_time ,
-            'to'  => $to_email
+            'to'    => $to_email,
+            'subject'   => $subject ? $subject : 'Astra Car Valuation (ACV)'
         ];
 
         $notif_email = (object) RestCurl::exec('POST',env('URL_SERVICE_NOTIF').'/send-email', $data_email);
