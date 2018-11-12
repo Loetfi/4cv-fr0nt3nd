@@ -40,7 +40,7 @@ class AuthController extends Controller
             $param = array(
                 'email' => $authSession->Email,
                 'password' => '4cv-p44sw0rd'
-            );
+            ); 
             // maka diloginkan langsung
             $login = (object) RestCurl::exec('POST',env('URL_SERVICE_ACCOUNT').'/auth/login',$param);
             
