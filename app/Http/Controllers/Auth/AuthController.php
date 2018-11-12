@@ -53,8 +53,11 @@ class AuthController extends Controller
                 return redirect('/');
 
             } else {
-                $request->session()->flash('status', 'Silahkan coba kembali.');
+
+                session()->flash('flash_notification',['type'=>'error','message'=>'Silahkan coba lagi']);
+                
                 return redirect('/');
+            
             }
         }
     }
