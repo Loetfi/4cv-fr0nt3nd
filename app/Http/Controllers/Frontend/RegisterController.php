@@ -44,6 +44,7 @@ class RegisterController extends Controller
             $time = Carbon::now()->addDays(3);
             $subject = 'Astra Car Valuation (ACV) | Link Aktivasi Akun';
 
+            // send email
             $this->SendEmail($to_email,$time,$subject);
             
             // dd($notif_email);

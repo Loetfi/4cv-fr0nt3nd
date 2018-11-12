@@ -26,15 +26,33 @@ Route::group(['namespace'=>'Frontend'], function() {
 		Route::get('profile','ProfileController@index');
 	});
 
-	Route::get('register','RegisterController@index');
+	/**
+	* ==================================================================================================================
+	* REGISTER ROUTE 
+	*/
+		Route::get('register','RegisterController@index');
 
-	Route::post('register/store','RegisterController@store');
+		Route::post('register/store','RegisterController@store');
 
-	Route::get('register/active-account/{hash}','RegisterController@activeAccount'); // hash email and time
+		Route::get('register/active-account/{hash}','RegisterController@activeAccount'); // hash email and time
 
-	Route::get('register/resend-link-page/{hash}','RegisterController@resendLinkPage');
+		Route::get('register/resend-link-page/{hash}','RegisterController@resendLinkPage');
 
-	Route::post('register/send-link','RegisterController@sendLink');
+		Route::post('register/send-link','RegisterController@sendLink');
+	/**
+	* END REGISTER ROUTE
+	* ==================================================================================================================
+	*/
+
+	/**
+	* ==================================================================================================================
+	* OTP ROUTE
+	*/
+		Route::get('otp','OtpController@index');
+	/**
+	* END OTP ROUTE
+	* ==================================================================================================================
+	*/
 });
 
 Route::group(['namespace'=>'Auth'], function() {
