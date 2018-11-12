@@ -12,7 +12,14 @@ class AuthController extends Controller
 {
     public function redirectToProvider($provider)
     {
-        return Socialite::driver($provider)->redirect();
+        try {
+            Socialite::driver($provider)->redirect();
+        } catch (\Exception $e) {
+            session()->flash('flash_notification',['type'=>'error','message'=>'Terjadi kesalahan sistem, silahkan coba 
+                lagi']);
+                
+            return redirect('/');
+        }
     }
     /**
      * Obtain the user information from provider.  Check if the user already exists in our
