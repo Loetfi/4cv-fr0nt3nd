@@ -13,10 +13,9 @@ class AuthController extends Controller
     public function redirectToProvider($provider)
     {
         try {
-            Socialite::driver($provider)->redirect();
+            return Socialite::driver($provider)->redirect();
         } catch (\Exception $e) {
-            session()->flash('flash_notification',['type'=>'danger','message'=>'Terjadi kesalahan sistem, silahkan coba 
-                lagi']);
+            session()->flash('flash_notification',['type'=>'danger','message'=>'Terjadi kesalahan']);
                 
             return redirect('/');
         }

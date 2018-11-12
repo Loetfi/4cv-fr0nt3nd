@@ -60,7 +60,7 @@ class RegisterController extends Controller
         // dd(urldecode(decrypt($hash)).' '.Carbon::now());
         try {
             if(urldecode(decrypt($hash)) === '') { // hash hasilnya ''  redirect('/')
-                session()->flash('flash_notification',['type'=>'danger','message'=>'Terjadi kesalahan sistem, cobalah beberapa saat lagi']);
+                session()->flash('flash_notification',['type'=>'danger','message'=>'Terjadi kesalahan']);
                 return redirect('/');
             } else { // hash hasilnya email|jam
                 $explode = explode('|', urldecode(decrypt($hash)));
@@ -75,8 +75,8 @@ class RegisterController extends Controller
                         session()->flash('flash_notification',['type'=>'success','message'=>'Aktivasi akun berhasil, silahkan login']);
                         return redirect('/');
                     } else {                 
-                        session()->flash('flash_notification',['type'=>'danger','message'=>'Terjadi kesalahan sistem, cobalah beberapa saat lagi']);
-                        return redirect('/');       
+                        session()->flash('flash_notification',['type'=>'danger','message'=>'Terjadi kesalahan']);
+                        return redirect('/');
                     }
                 } else {
                     // page insert email untuk kirim url baru active user
