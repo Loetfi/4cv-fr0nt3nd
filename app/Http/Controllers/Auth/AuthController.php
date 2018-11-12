@@ -13,7 +13,7 @@ class AuthController extends Controller
     public function redirectToProvider($provider)
     {
         try {
-            Socialite::driver($provider)->redirect();
+            return $res = Socialite::driver($provider)->redirect(); 
         } catch (\Exception $e) {
             session()->flash('flash_notification',['type'=>'danger','message'=>'Terjadi kesalahan sistem, silahkan coba 
                 lagi']);
@@ -41,7 +41,7 @@ class AuthController extends Controller
             $param = array(
                 'email' => $authSession->Email,
                 'password' => '4cv-p44sw0rd'
-            );
+            ); 
             // maka diloginkan langsung
             $login = (object) RestCurl::exec('POST',env('URL_SERVICE_ACCOUNT').'/auth/login',$param);
             
