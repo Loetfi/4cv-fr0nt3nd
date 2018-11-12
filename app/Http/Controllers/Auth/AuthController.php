@@ -15,7 +15,7 @@ class AuthController extends Controller
         try {
             Socialite::driver($provider)->redirect();
         } catch (\Exception $e) {
-            session()->flash('flash_notification',['type'=>'error','message'=>'Terjadi kesalahan sistem, silahkan coba 
+            session()->flash('flash_notification',['type'=>'danger','message'=>'Terjadi kesalahan sistem, silahkan coba 
                 lagi']);
                 
             return redirect('/');
@@ -61,7 +61,7 @@ class AuthController extends Controller
 
             } else {
 
-                session()->flash('flash_notification',['type'=>'error','message'=>'Silahkan coba lagi']);
+                session()->flash('flash_notification',['type'=>'danger','message'=>'Silahkan coba lagi']);
                 
                 return redirect('/');
             
