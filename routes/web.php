@@ -49,6 +49,10 @@ Route::group(['namespace'=>'Frontend'], function() {
 	* OTP ROUTE
 	*/
 		Route::get('otp/{phone_number}','OtpController@index');
+		
+		Route::post('otp/resend-otp','OtpController@resendOtp');
+
+		Route::post('otp/validate-otp','OtpController@validateOtp');
 	/**
 	* END OTP ROUTE
 	* ==================================================================================================================

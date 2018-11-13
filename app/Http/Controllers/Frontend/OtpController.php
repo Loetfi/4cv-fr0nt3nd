@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Frontend;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Http\Helpers\Api;
-use App\Http\Helpers\RestCurl;
+use App\Http\Traits\TraitOtp;
+use App\Http\Controllers\Controller;
 
 class OtpController extends Controller
 {
+    use TraitOtp;
+
     public function index($phone_number)
     {
     	// dd(session()->all());
@@ -16,31 +18,70 @@ class OtpController extends Controller
     		$description = 'Lorem Ipsum Dolor Sit Amet';
     		$campaign = 'Lorem Ipsum';
 	    	$r = $this->sendOtp($phone_number, $description, $campaign);
-	    	if($r->status == 200) {
-	    		session(['otp_code'=>$r->data->data->otp_code]);
+	    	if($r->status == 200) { // otp send
+	    		session([
+                    'otp_code'      =>$r->data->data->otp_code,
+                    // 'otp_code'      => '12345',
+                    'phone_number'  =>$phone_number
+                ]);
 
 	    		return view('frontend.otp.index_otp');
-	    	} else {
-	    		session()->flash('flash_notification',['type'=>'error','message'=>'Terjadi kesalahan sistem']);
+	    	} else { // otp not send
+	    		session()->flash('flash_notification',['type'=>'danger','message'=>'Terjadi kesalahan sistem']);
 
-	    		return redirect('/');
+	    		return redirect('otp/' . $phone_number);
 	    	}
     	} catch (\Exception $e) {
-    		session()->flash('flash_notification',['type'=>'error','message'=>'Terjadi kesalahan sistem']);
+    		session()->flash('flash_notification',['type'=>'danger','message'=>'Terjadi kesalahan sistem']);
 	    		
     		return redirect('/');
     	}
     }
 
-    public function sendOtp($phone_number, $description, $campaign)
+    public function validateOtp(Request $request)
     {
-    	$data = [
-    		'phone_number' 	=> $phone_number,
-    		'description'	=> $description,
-    		'campaign'		=> $campaign
-    	];
-    	$result = (object) RestCurl::exec('POST',env('URL_SERVICE_OTP').'/send-otp',$data);
+        // dd($request->all());
+        $this->validate($request, [
+            'otp_code' => 'required'
+        ]);
 
-    	return $result;
+        try {
+            $session_otp_code = session()->get('otp_code');
+            if($request->otp_code == $session_otp_code) { // otp code sama dengan session
+                return response()->json(Api::format('1',[],'Kode otp sama'), 200);
+            } else { // otp code tidak sama
+                return response()->json(Api::format('0',[],'Kode otp tidak sama'), 200);
+            }
+        } catch (\Exception $e) {
+            // session()->flash('flash_notification',['type'=>'danger','message'=>'Terjadi kesalahan, cobalah beberapa saat lagi']);
+            return response()->json(Api::format('0',[],'Terjadi kesalahan, cobalah beberapa saat lagi'), 200);
+        }
+    }
+
+    public function resendOtp(Request $request)
+    {
+        try {
+            $description = 'Resend OTP';
+            $campaign = 'Resend OTP';
+            $phone_number = session()->get('phone_number');
+            $r = $this->sendOtp($phone_number, $description, $campaign);
+            if($r->status == 200) { // otp send
+                session([
+                    'otp_code'      =>$r->data->data->otp_code,
+                    'phone_number'  =>$phone_number
+                ]);
+
+                return response()->json(Api::format('1',[],'Otp berhasil dikirim ulang'), 200);
+
+            } else { // otp not send
+                // session()->flash('flash_notification',['type'=>'error','message'=>'Terjadi kesalahan sistem']);
+
+                return response()->json(Api::format('0',[],'Otp gagal dikirim'), 200);
+            }
+        } catch (\Exception $e) {
+            session()->flash('flash_notification',['type'=>'error','message'=>'Terjadi kesalahan sistem']);
+
+            return redirect('otp/'.$phone_number);
+        }
     }
 }

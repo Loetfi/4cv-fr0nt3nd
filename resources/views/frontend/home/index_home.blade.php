@@ -52,9 +52,11 @@
 	    </div>
 
 	    @if (session()->has('flash_notification.message'))
-		  	<div class="alert alert-{{ session()->get('flash_notification.type') }} alert-dismissible">
-		    	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-		    	{!! session()->get('flash_notification.message') !!}
+		  	<div id="flash_notification">
+			  	<div class="alert alert-{{ session()->get('flash_notification.type') }} alert-dismissible">
+			    	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+			    	{!! session()->get('flash_notification.message') !!}
+			  	</div>
 		  	</div>
 		@endif
 
