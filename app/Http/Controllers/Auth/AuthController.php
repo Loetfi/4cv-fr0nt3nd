@@ -34,7 +34,7 @@ class AuthController extends Controller
         
         // cek apakah user dengan email sosmed tsb sudah pernah ada atau belum.
         $authSession = $this->findOrCreateUser($user, $provider);
-        // if(count($authSession) > 0) {
+        
         if ($authSession) {
             // jika ada
             $param = array(
@@ -56,11 +56,12 @@ class AuthController extends Controller
                 ]);
 
                 session()->flash('flash_notification',['type'=>'success','message'=>'Berhasil Login']);
+                
                 return redirect('/');
 
             } else {
 
-                session()->flash('flash_notification',['type'=>'danger','message'=>'Silahkan coba lagi']);
+                session()->flash('flash_notification',['type'=>'danger','message'=>'Email sudah terdaftar, silahkan coba lagi']);
                 
                 return redirect('/');
             
