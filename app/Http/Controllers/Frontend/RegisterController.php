@@ -75,7 +75,7 @@ class RegisterController extends Controller
                         session()->flash('flash_notification',['type'=>'success','message'=>'Aktivasi akun berhasil, silahkan login']);
                         return redirect('/');
                     } else {                 
-                        session()->flash('flash_notification',['type'=>'danger','message'=>'Terjadi kesalahan']);
+                        session()->flash('flash_notification',['type'=>'danger','message'=>'Terjadi kesalahan, cobalah beberapa saat lagi']);
                         return redirect('/');
                     }
                 } else {
