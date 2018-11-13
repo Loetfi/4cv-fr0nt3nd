@@ -10,6 +10,9 @@
         margin-top: 100px auto;
         /*left: 50%;*/
     }
+    input[type=number]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+    }
 </style>
 @endsection
 
@@ -52,7 +55,7 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-12 input-notification">
-                                        <input id="phone_number" name="phone_number" placeholder="Ext: 08197689999" class="form-control input-md" type="text"><span>Pastikan nomor yang anda masukan <strong>benar</strong>. Agar kami mudah melakukan verifikasi</span>
+                                        <input id="phone_number" name="phone_number" placeholder="Ext: 08197689999" class="form-control input-md" type="number"><span>Pastikan nomor yang anda masukan <strong>benar</strong>. Agar kami mudah melakukan verifikasi</span>
                                     </div>
                                 </div>
                                 <div class="form-group">
