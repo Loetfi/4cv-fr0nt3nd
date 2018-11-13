@@ -2,11 +2,23 @@
 
 @section('title','ACV Register')
 
+@section('css')
+<style type="text/css">
+    .toast-top-center {
+        position: fixed;
+        top: 100px;
+        margin-top: 100px auto;
+        /*left: 50%;*/
+    }
+</style>
+@endsection
+
 @section('content')
 <section class="parallax-services" data-parallax="scroll" data-image-src="{{ asset('frontend/img/registration-bg.jpg')}}">
     <span class="overlay-medium-light zindex-lower"></span>  
 </section>
 <section>
+    <div id="notification"></div>
     <div class="container">
     <div class="col-md-12 registration-section">
         <div class="quotes-section">
@@ -50,7 +62,7 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-12 input-notification">
-                                        <input id="confirm_password" name="confirm_password" placeholder="Ulangi kata sandi" class="form-control input-md" type="password"><span>Kata sandi tidak sama</span>
+                                        <input id="confirm_password" name="confirm_password" placeholder="Ulangi kata sandi" class="form-control input-md" type="password">
                                     </div>
                                 </div>
                                 <div class="form-group text-center">
@@ -208,7 +220,15 @@ $(document).ready(function() {
                                 window.location.href = '{{ url("/") }}';  
                             // }, 4000);
                         } else {
-                            toastr.error(r.message,'Error', {timeOut: 3000});
+                            toastr.options = {
+                                timeOut : 0,
+                                extendedTimeOut : 100,
+                                tapToDismiss : true,
+                                debug : false,
+                                fadeOut: 10,
+                                positionClass : "toast-top-center"
+                            };
+                            toastr.error(r.message,'Error');
                         }
                     },
                     error: function(r) {

@@ -37,7 +37,7 @@ class RegisterController extends Controller
     	// dd($user);
     	if($user->status !== 200) {
             // email exist and fail insert
-            return response()->json(Api::format('0',[],'The email has already been taken'), 200);
+            return response()->json(Api::format('0',[],'Email sudah terdaftar'), 200);
     	} else {
             // success insert and send email
             $to_email = $user->data->data->Email;
