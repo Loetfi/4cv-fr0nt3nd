@@ -10,12 +10,13 @@
         <meta name="author" content="">
         <meta name="title" content="">
 
-        <link rel="shortcut icon" href="images/icon/favicon.ico">
+        <!-- <link rel="shortcut icon" href="images/icon/favicon.ico">
         <link rel="icon" type="image/png" href="images/icon/favicon-192x192.png" sizes="192x192">
         <link rel="icon" type="image/png" href="images/icon/favicon-160x160.png" sizes="160x160">
         <link rel="icon" type="image/png" href="images/icon/favicon-96x96.png" sizes="96x96">
         <link rel="icon" type="image/png" href="images/icon/favicon-16x16.png" sizes="16x16">
         <link rel="icon" type="image/png" href="images/icon/favicon-32x32.png" sizes="32x32">
+         -->
         <!-- META OPENGRAPH FACEBOOK -->
         <meta property="og:url" content="" />
         <meta property="og:type" content=""/>
@@ -195,7 +196,9 @@
             </div>
         </div>
         
-        @guest
+        @if(session()->has('user.FullName'))
+        <!-- user login -->
+        @else 
         <!-- POPUP LOGIN -->
         <!-- line modal -->
         <div class="modal modal-registration fade mt60" id="ModalLogin" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
@@ -254,9 +257,7 @@
                 </div>
             </div>
         </div>
-        @else
-        <!-- user login -->
-        @endguest
+        @endif
 
         <!-- Dragable Testimonial Section -->
         <script src="{{ asset('frontend/js/jquery-2.2.0.min.js') }}"></script>
@@ -268,9 +269,11 @@
         <script src="{{ asset('frontend/js/wow.js') }}"></script>
         <script src="{{ asset('frontend/js/jquery.fatNav.js') }}"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-        @guest
+        @if(session()->has('user.FullName'))
+        <!-- user login -->
+        @else
         <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
-
+        <script src="{{ asset('frontend/js/blockUI.min.js') }}"></script>
         <script>
             $(document).ready(function() {
                 $.ajaxSetup({
@@ -297,7 +300,8 @@
                     $('#frm-login').validate({
                         rules: {
                             email: {
-                                required: true
+                                required: true,
+                                email: true
                             },
                             password: {
                                 required: true
@@ -310,6 +314,7 @@
                                 dataType: "json",
                                 data: $('#frm-login').serialize(),
                                 beforeSend: function (r) {
+                                    $('#btn-login').attr('disabled',true);
                                 },
                                 success: function(r) {
                                     if(r.status == 1) {
@@ -323,6 +328,9 @@
                                 },
                                 error: function(r) {
                                     toastr.error('Whoops, something went wrong','Error', {timeOut: 3000});
+                                },
+                                complete: function(r) {
+                                    $('#btn-login').attr('disabled', false);
                                 }
                             });
                         }
@@ -330,7 +338,7 @@
                 });
             });
         </script>
-        @endguest
+        @endif
 
         @yield('script')
     

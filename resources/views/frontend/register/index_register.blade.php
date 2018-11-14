@@ -108,6 +108,7 @@
 @endsection
 
 @section('script')
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
 <script src="{{ asset('frontend/js/blockUI.min.js') }}"></script>
 <script>
     new WOW().init();
@@ -171,6 +172,12 @@
 <!-- jquery validate -->
 <script>
 $(document).ready(function() {
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+
     jQuery(function($) {
         $.validator.setDefaults({
             errorClass: 'help-block',
@@ -220,13 +227,13 @@ $(document).ready(function() {
                         $.blockUI({   
                             // message: $('#loader_before_send'),
                             css: { 
-                                    border: 'none', 
-                                    padding: '15px', 
-                                    backgroundColor: '#000', 
-                                    '-webkit-border-radius': '10px', 
-                                    '-moz-border-radius': '10px', 
-                                    opacity: .5, 
-                                    color: '#fff' 
+                                border: 'none', 
+                                padding: '15px', 
+                                backgroundColor: '#000', 
+                                '-webkit-border-radius': '10px', 
+                                '-moz-border-radius': '10px', 
+                                opacity: .5, 
+                                color: '#fff' 
                             }
                         }); 
                     },
