@@ -102,9 +102,13 @@
         </div>
     </div>
 </section>
+<div id="loader_before_send" style="display: none;">
+    <img src="{{ asset('frontend/img/loader-ball.gif') }}">
+</div>
 @endsection
 
 @section('script')
+<script src="{{ asset('frontend/js/blockUI.min.js') }}"></script>
 <script>
     new WOW().init();
 </script>
@@ -213,6 +217,18 @@ $(document).ready(function() {
                     dataType: "json",
                     data: $('#frm-register').serialize(),
                     beforeSend: function (r) {
+                        $.blockUI({   
+                            // message: $('#loader_before_send'),
+                            css: { 
+                                    border: 'none', 
+                                    padding: '15px', 
+                                    backgroundColor: '#000', 
+                                    '-webkit-border-radius': '10px', 
+                                    '-moz-border-radius': '10px', 
+                                    opacity: .5, 
+                                    color: '#fff' 
+                            }
+                        }); 
                     },
                     success: function(r) {
                         // console.log(r);
@@ -236,6 +252,9 @@ $(document).ready(function() {
                     },
                     error: function(r) {
                         toastr.error('Terjadi kesalahan, cobalah beberapa saat lagi','Error', {timeOut: 3000});
+                    },
+                    complete: function(r) {
+                        $.unblockUI();
                     }
                 });
             }
