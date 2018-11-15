@@ -36,9 +36,11 @@ Route::group(['namespace'=>'Frontend'], function() {
 
 		Route::get('register/active-account/{hash}','RegisterController@activeAccount'); // hash email and time
 
-		Route::get('register/resend-link-page/{hash}','RegisterController@resendLinkPage');
+		Route::get('register/resend-link-page/{hash}','RegisterController@resendLinkPage'); // page resend link active user
 
-		Route::post('register/send-link','RegisterController@sendLink');
+		Route::post('register/send-link','RegisterController@sendLink'); // process active user
+
+		Route::post('register/resend-email','RegisterController@resendEmail'); // process resend email
 	/**
 	* END REGISTER ROUTE
 	* ==================================================================================================================

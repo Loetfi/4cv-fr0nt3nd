@@ -7,9 +7,15 @@ use App\Http\Helpers\Api;
 use App\Http\Helpers\RestCurl;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
+use App\Http\Traits\TraitEmail;
 
 class RegisterController extends Controller
 {
+    use TraitEmail;
+
+    /**
+    * @return view index register
+    */
     public function index()
     {
     	return view('frontend.register.index_register');
@@ -20,7 +26,7 @@ class RegisterController extends Controller
     * @param email unique
     * @param password min 6, ConfirmPassword same Password
     * @param phone_number numeric
-    * @return success redirect('/')
+    * @return success send email
     */
     public function store(Request $request)
     {
@@ -40,21 +46,38 @@ class RegisterController extends Controller
             return response()->json(Api::format('0',[],'Email sudah terdaftar'), 200);
     	} else {
             // success insert and send email
-            $to_email = $user->data->data->Email;
             $time = Carbon::now()->addDays(3);
+            
+            $to_email = $user->data->data->Email;
             $subject = 'Astra Car Valuation (ACV) | Link Aktivasi Akun';
+            $body = 'Berikut adalah link untuk mengaktifkan account anda, dengan waktu 3 hari setelah register '
+                        . ENV('APP_URL') . '/register/active-account/'. urlencode(encrypt($to_email.'|'.$time));
 
             // send email
-            $this->SendEmail($to_email,$time,$subject);
+            $r =  $this->sendEmail($to_email,$subject,$body);
+
+            if ($r->status == 200) {
+                
+                $email = $r->data->data->email->To;
+                
+                session(['email'=>$to_email]);
+                
+                return response()->json(Api::format('1',[],$r->data->message), 200);
             
-            // dd($notif_email);
-
-            session()->flash('flash_notification',['type'=>'success','message'=>'Cek email anda untuk aktivasi account']);
-
-            return response()->json(Api::format(1,[],'Please check your email to active account'), 200);
+            } else {
+                
+                return response()->json(Api::format('0',[],'Email untuk aktivasi akun gagal kirim'), 200);
+            
+            }
         }
     }
 
+    /**
+    * @param $hash = email|time
+    * @return redirect('/') jika berhasil aktivasi
+    * @return redirect('/') jika gagal update IsActive 0 menjadi 1 berdasarkan email
+    * @return redirect('register/resend-link-page/'.$hash) jika time < date_now()
+    */
     public function activeAccount($hash)
     {
         // dd(urldecode(decrypt($hash)).' '.Carbon::now());
@@ -89,48 +112,70 @@ class RegisterController extends Controller
         }
     }
 
+    /**
+    * @param $hash = email|waktu
+    * @return view('f_send_link')
+    */
     public function resendLinkPage($hash)
     {
         $data['hash'] = $hash;
         return view('frontend.register.f_send_link',$data);
     }
 
+    /**
+    * @param request->email
+    * @return json
+    */
     public function sendLink(Request $request)
     {
         // dd($request->all());
         $explode = explode('|', urldecode(decrypt($request->hash)));
         
-        if($explode[0] == $request->email) {
+        if($explode[0] == $request->email) { // email == $request->email
             
             $time = Carbon::now()->addDays(3);
+
             $to_email = $request->email;
             $subject = 'Astra Car Valuation (ACV) | Link Aktivasi Akun';
+            $body = 'Berikut adalah link untuk mengaktifkan account anda, dengan waktu 3 hari setelah register '
+                        . ENV('APP_URL') . '/register/active-account/'. urlencode(encrypt($to_email.'|'.$time));
             
             // send email
-            $this->sendEmail($to_email, $time, $subject);
+            $r = $this->sendEmail($to_email, $subject, $body);
 
             session()->flash('flash_notification',['type'=>'success','message'=>'Link aktivasi telah dikirim ulang, silahkan periksa kembali email anda']);
             
             return response()->json(Api::format('1',[],'Link aktivasi telah dikirim ulang, silahkan periksa kembali email anda'), 200);
-        } else {
+        } else { // email != $request->email
             
             return response()->json(Api::format('0',[],'Email tidak valid'), 200);
 
         }
     }
 
-    public function sendEmail($to_email, $time, $subject = false) 
+    /**
+    * @param email required from session
+    * @return json and resend email activation account
+    */
+    public function resendEmail()
     {
-        $to_email_time = urlencode(encrypt($to_email.'|'.$time));
+        $time = Carbon::now()->addDays(3);
 
-        $data_email = [
-            'body'  => 'Berikut adalah link untuk mengaktifkan account anda, dengan waktu 3 hari setelah register '
-                        . ENV('APP_URL') . '/register/active-account/'. $to_email_time ,
-            'to'    => $to_email,
-            'subject'   => $subject ? $subject : 'Astra Car Valuation (ACV)'
-        ];
+        $to_email   = session()->get('email');
+        $subject    = 'Astra Car Valuation (ACV) | Link Aktivasi Akun [Kirim Ulang]';
+        $body       = 'Berikut adalah link untuk mengaktifkan account anda, dengan waktu 3 hari setelah register '
+                        . ENV('APP_URL') . '/register/active-account/'. urlencode(encrypt($to_email.'|'.$time));
 
-        $notif_email = (object) RestCurl::exec('POST',env('URL_SERVICE_NOTIF').'/send-email', $data_email);
-        return $notif_email;
+        // send email
+        $r =  $this->sendEmail($to_email,$subject,$body);
+        if ($r->status == 200) {
+            
+            return response()->json(Api::format('1',[],'Email telah dikirim ulang, silahkan periksa kembali email anda'), 200);
+        
+        } else {
+            
+            return response()->json(Api::format('0',[],'Email gagal dikirim ulang'), 200);
+
+        }
     }
 }

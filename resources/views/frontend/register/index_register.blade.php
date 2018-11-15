@@ -13,6 +13,21 @@
     input[type=number]::-webkit-inner-spin-button {
       -webkit-appearance: none;
     }
+    .btn-warning {
+        font-family: "open_sansregular", Helvetica, San serif;
+        background-color: #ec971f;
+        font-size: 14px;
+        color: #ffffff;
+        padding: 10px 25px;
+        display: inline-block;
+        border: 1px solid #ec971f;
+        border-radius: 0 !important;
+    }
+    .btn-warning:hover {
+        background-color: transparent;
+        border: 1px solid #ec971f;
+        color: #ec971f;
+    } 
 </style>
 @endsection
 
@@ -69,7 +84,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group text-center">
-                                    <button class="btn btn-info" type="submit" id="btn-register">Daftar Sekarang</button>
+                                    <button class="btn btn-info" type="submit" id="btn-register">Daftar Sekarang</button> <button type="button" class="btn btn-warning" id="btn-resend-email" style="display:none;">Kirim Ulang Email</button>
                             </fieldset>
                         </form>
                         </div>
@@ -172,6 +187,7 @@
 <!-- jquery validate -->
 <script>
 $(document).ready(function() {
+    $('#btn-resend-email').hide();
     $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -240,11 +256,19 @@ $(document).ready(function() {
                     success: function(r) {
                         // console.log(r);
                         if(r.status == 1) {
-                            // toastr.success(r.message,'Success Register', {timeOut: 3000});
-
-                            // setTimeout(function() {
-                                window.location.href = '{{ url("/") }}';  
-                            // }, 4000);
+                            // $('#frm-register')[0].reset();
+                            toastr.options = {
+                                timeOut : 0,
+                                extendedTimeOut : 100,
+                                tapToDismiss : true,
+                                debug : false,
+                                fadeOut: 10,
+                                positionClass : "toast-top-center"
+                            };
+                            toastr.success(r.message,'Success');
+                            $('input').prop('disabled', true);
+                            $('#btn-register').attr('disabled',true);
+                            $('#btn-resend-email').show();
                         } else {
                             toastr.options = {
                                 timeOut : 0,
@@ -266,6 +290,25 @@ $(document).ready(function() {
                 });
             }
         });
+    });
+
+    $('#btn-resend-email').on('click', function(e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: '{{ url("register/resend-email")}}',
+            dataType: "json",
+            // data: {otp_code:otp_code},
+            beforeSend: function (r) {
+                console.log(r);
+            },
+            success: function(r) {
+                toastr.info(r.message,'Info');
+            },
+            error: function(r) {
+                console.log(r);
+            }
+        }); 
     });
 });
 </script>
