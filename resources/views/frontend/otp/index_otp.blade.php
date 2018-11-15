@@ -25,7 +25,7 @@
                         </div>
                     </form>
                     
-                    <p>Tidak menerima kode OTP ? <a href="#" id="link-kirim-ulang">kirim ulang</a></p>
+                    <p>Tidak menerima kode OTP ? <a href="#" id="link-resend-otp">kirim ulang</a></p>
                     <div id="time-countdown"></div>
                     <span class="text-center col-md-6 mb20">
                         <button class="btn-info mt10 text-right" id="btn-verifikasi">
@@ -101,9 +101,8 @@
             });
         });
 
-        $('#link-kirim-ulang').on('click', function(e) {
+        $('#link-resend-otp').on('click', function(e) {
             e.preventDefault();
-
             $.ajax({
                 type: 'POST',
                 url: '{{ url("otp/resend-otp")}}',
