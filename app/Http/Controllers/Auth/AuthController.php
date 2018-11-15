@@ -116,7 +116,7 @@ class AuthController extends Controller
             );
             
             $login =  (object) RestCurl::exec('POST',env('URL_SERVICE_ACCOUNT').'/auth/login',$param);
-            // dd($login->data->message);
+            // dd($login);
             if ($login->status == 200 ) {
                 // success login
                 $access_token = $login->data->data->access_token;
@@ -142,6 +142,10 @@ class AuthController extends Controller
         }
     }
 
+    /**
+    * @param access_token
+    * @return json redirect('/') and destroy session
+    */
     public function logout()
     {
         try {
