@@ -327,7 +327,7 @@
                                     }
                                 },
                                 error: function(r) {
-                                    toastr.error('Whoops, something went wrong','Error', {timeOut: 3000});
+                                    toastr.error('Terjadi kesalahan, cobalah beberapa saat lagi','Error', {timeOut: 3000});
                                 },
                                 complete: function(r) {
                                     $('#btn-login').attr('disabled', false);
