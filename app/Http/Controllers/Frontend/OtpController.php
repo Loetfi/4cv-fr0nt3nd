@@ -13,10 +13,15 @@ class OtpController extends Controller
 
     public function index($phone_number)
     {
-		$description = 'Lorem Ipsum Dolor Sit Amet';
-		$campaign = 'Lorem Ipsum';
-        $user_id = 1; 
-    	$r = $this->sendOtp($phone_number, $description, $campaign, $user_id);
+        $data = [
+            'phone_number'  => $phone_number,
+            'description'   => 'OTP From Astra Car Valuation (ACV)',
+            'campaign'      => 'OTP',
+            'user_id'       => 1
+        ];
+
+    	$r = $this->sendOtp($data);
+        dd($r);
     	if($r->status == 200) { // otp send
     		session([
                 'otp_code'      =>$r->data->data->otp_code,
@@ -55,10 +60,13 @@ class OtpController extends Controller
     public function resendOtp(Request $request)
     {
         try {
-            $description = 'Resend OTP';
-            $campaign = 'Resend OTP';
-            $phone_number = session()->get('phone_number');
-            $r = $this->sendOtp($phone_number, $description, $campaign);
+           $data = [
+                'phone_number'  => $phone_number,
+                'description'   => 'Resend OTP From Astra Car Valuation (ACV)',
+                'campaign'      => 'Resend OTP',
+                'user_id'       => 1
+            ];
+            $r = $this->sendOtp($data);
             if($r->status == 200) { // otp send
                 session([
                     'otp_code'      =>$r->data->data->otp_code,
@@ -75,7 +83,7 @@ class OtpController extends Controller
         } catch (\Exception $e) {
             session()->flash('flash_notification',['type'=>'error','message'=>'Terjadi kesalahan sistem']);
 
-            return redirect('otp/'.$phone_number);
+            return response()->json(['type'=>'danger','message'=>'Terjadi kesalahan sistem']);
         }
     }
 }
