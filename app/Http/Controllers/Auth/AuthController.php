@@ -154,7 +154,9 @@ class AuthController extends Controller
             // dd($r);
 
         } catch (\Exception $e) {
+            
             return response()->json(Api::format('0',[],$e->getMessage()), 500);
+        
         }
         // session()->flash('status', 'Silahkan coba kembali.');
         session()->flush();

@@ -13,28 +13,22 @@ class OtpController extends Controller
 
     public function index($phone_number)
     {
-    	// dd(session()->all());
-    	try {
-    		$description = 'Lorem Ipsum Dolor Sit Amet';
-    		$campaign = 'Lorem Ipsum';
-	    	$r = $this->sendOtp($phone_number, $description, $campaign);
-	    	if($r->status == 200) { // otp send
-	    		session([
-                    'otp_code'      =>$r->data->data->otp_code,
-                    // 'otp_code'      => '12345',
-                    'phone_number'  =>$phone_number
-                ]);
+		$description = 'Lorem Ipsum Dolor Sit Amet';
+		$campaign = 'Lorem Ipsum';
+        $user_id = 1; 
+    	$r = $this->sendOtp($phone_number, $description, $campaign, $user_id);
+    	if($r->status == 200) { // otp send
+    		session([
+                'otp_code'      =>$r->data->data->otp_code,
+                // 'otp_code'      => '12345',
+                'phone_number'  =>$phone_number
+            ]);
 
-	    		return view('frontend.otp.index_otp');
-	    	} else { // otp not send
-	    		session()->flash('flash_notification',['type'=>'danger','message'=>'Terjadi kesalahan sistem']);
-
-	    		return redirect('otp/' . $phone_number);
-	    	}
-    	} catch (\Exception $e) {
+    		return view('frontend.otp.index_otp');
+    	} else { // otp not send
     		session()->flash('flash_notification',['type'=>'danger','message'=>'Terjadi kesalahan sistem']);
-	    		
-    		return redirect('/');
+
+    		return response()->json(['type'=>'danger','message'=>'Terjadi kesalahan sistem']);
     	}
     }
 
