@@ -19,9 +19,7 @@ class OtpController extends Controller
             'campaign'      => 'OTP',
             'user_id'       => 1
         ];
-        
         $r = $this->sendOtp($data);
-
     	if($r->status == 200) { // otp send
     		session([
                 'otp_code'      =>$r->data->data->otp_code,
@@ -56,8 +54,9 @@ class OtpController extends Controller
         }
     }
 
-    public function resendOtp(Request $request)
+    public function resendOtp()
     {
+        $phone_number = session()->get('phone_number');
         $data = [
             'user_id'       => 1,
             'phone_number'  => $phone_number,
