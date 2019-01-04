@@ -19,9 +19,9 @@ class OtpController extends Controller
             'campaign'      => 'OTP',
             'user_id'       => 1
         ];
+        
+        $r = $this->sendOtp($data);
 
-    	$r = $this->sendOtp($data);
-        dd($r);
     	if($r->status == 200) { // otp send
     		session([
                 'otp_code'      =>$r->data->data->otp_code,
@@ -39,51 +39,44 @@ class OtpController extends Controller
 
     public function validateOtp(Request $request)
     {
-        // dd($request->all());
         $this->validate($request, [
             'otp_code' => 'required'
         ]);
-
-        try {
-            $session_otp_code = session()->get('otp_code');
-            if($request->otp_code == $session_otp_code) { // otp code sama dengan session
-                return response()->json(Api::format('1',[],'Kode otp sama'), 200);
-            } else { // otp code tidak sama
-                return response()->json(Api::format('0',[],'Kode otp tidak sama'), 200);
-            }
-        } catch (\Exception $e) {
-            // session()->flash('flash_notification',['type'=>'danger','message'=>'Terjadi kesalahan, cobalah beberapa saat lagi']);
-            return response()->json(Api::format('0',[],'Terjadi kesalahan, cobalah beberapa saat lagi'), 200);
+        
+        $session_otp_code = session()->get('otp_code');
+        
+        if($request->otp_code == $session_otp_code) { // otp code sama dengan session
+        
+            return response()->json(Api::format('1',[],'Kode otp sama'), 200);
+        
+        } else { // otp code tidak sama
+          
+            return response()->json(Api::format('0',[],'Kode otp tidak sama'), 200);
+        
         }
     }
 
     public function resendOtp(Request $request)
     {
-        try {
-           $data = [
-                'phone_number'  => $phone_number,
-                'description'   => 'Resend OTP From Astra Car Valuation (ACV)',
-                'campaign'      => 'Resend OTP',
-                'user_id'       => 1
-            ];
-            $r = $this->sendOtp($data);
-            if($r->status == 200) { // otp send
-                session([
-                    'otp_code'      =>$r->data->data->otp_code,
-                    'phone_number'  =>$phone_number
-                ]);
+        $data = [
+            'user_id'       => 1,
+            'phone_number'  => $phone_number,
+            'description'   => 'Resend OTP From Astra Car Valuation (ACV)',
+            'campaign'      => 'Resend OTP',
+        ];
+        $r = $this->sendOtp($data);
+        if($r->status == 200) { // otp send
+            session([
+                'otp_code'      =>$r->data->data->otp_code,
+                'phone_number'  =>$phone_number
+            ]);
 
-                return response()->json(Api::format('1',[],'Otp berhasil dikirim ulang'), 200);
+            return response()->json(Api::format('1',[],'Otp berhasil dikirim ulang'), 200);
 
-            } else { // otp not send
-                // session()->flash('flash_notification',['type'=>'error','message'=>'Terjadi kesalahan sistem']);
-
-                return response()->json(Api::format('0',[],'Otp gagal dikirim'), 200);
-            }
-        } catch (\Exception $e) {
+        } else { // otp not send
             session()->flash('flash_notification',['type'=>'error','message'=>'Terjadi kesalahan sistem']);
 
-            return response()->json(['type'=>'danger','message'=>'Terjadi kesalahan sistem']);
+            return response()->json(Api::format('0',[],'Otp gagal dikirim'), 200);
         }
     }
 }
