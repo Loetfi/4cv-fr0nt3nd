@@ -211,17 +211,21 @@
                         <div class="col-md-6">
                             <h3 class="text-center mb30">Masuk Akun</h3>
                             <div>
-                                <form id="frm-login" method="POST">
+                                <form id="frm-login" method="POST" action="{{ url('login') }} ">
                                     @csrf
                                     <fieldset>
                                         <div class="form-group">
                                             <div class="col-md-12">
-                                                <input id="email" name="email" placeholder="email" class="form-control input-md" type="text" required>
+                                                <input name="email" placeholder="email" class="form-control input-md" type="text" required 
+                                                    oninvalid="this.setCustomValidity('Email tidak boleh kosong')"
+                                                    oninput="this.setCustomValidity('')">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-md-12">
-                                                <input id="password" name="password" placeholder="password" type="password" class="form-control input-md" type="text" required>
+                                                <input name="password" placeholder="password" type="password" class="form-control input-md" type="text" required
+                                                    oninvalid="this.setCustomValidity('Password tidak boleh kosong')"
+                                                    oninput="this.setCustomValidity('')">
                                             </div>
                                         </div>
                                         <div class="form-group text-center">
@@ -239,8 +243,8 @@
                                         <fieldset>
                                             <div class="form-group">
                                                 <div class="login-socialmedia register-socialmedia">
-                                                    <a href="{{ url('auth/facebook') }}" class="login-facebook"><span class="ic ic-facebook"></span>Masuk via Facebook</a>
-                                                    <a href="{{ url('auth/twitter') }}" class="login-twitter"><span class="ic ic-twitter"></span>Masuk via Twitter</a>
+                                                    <!-- <a href="{{ url('auth/facebook') }}" class="login-facebook"><span class="ic ic-facebook"></span>Masuk via Facebook</a> -->
+                                                    <!-- <a href="{{ url('auth/twitter') }}" class="login-twitter"><span class="ic ic-twitter"></span>Masuk via Twitter</a> -->
                                                     <a href="{{ url('auth/google') }}" class="login-google"><span class="ic ic-google"></span>Masuk via Google</a>
                                                     <!--  <a href="//ibid.astra.co.id/omni/linkedin/linkedin/" class="login-linkedin"><span class="ic ic-linkedin"></span>Daftar via Linkedin</a> -->
                                                 </div>
@@ -274,70 +278,6 @@
         @else
         <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
         <script src="{{ asset('frontend/js/blockUI.min.js') }}"></script>
-        <script>
-            $(document).ready(function() {
-                $.ajaxSetup({
-                  headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                  }
-                });
-                jQuery(function($) {
-                    $.validator.setDefaults({
-                        errorClass: 'help-block',
-                        highlight: function(element) {
-                            $(element)
-                                .closest('.form-group')
-                                .addClass('has-error');
-                        },
-                        unhighlight: function(element) {
-                            $(element)
-                                .closest('.form-group')
-                                .removeClass('has-error')
-                                .addClass('has-success');
-                        }
-                    });
-
-                    $('#frm-login').validate({
-                        rules: {
-                            email: {
-                                required: true,
-                                email: true
-                            },
-                            password: {
-                                required: true
-                            }
-                        },
-                        submitHandler: function(form) {
-                            $.ajax({
-                                type: 'POST',
-                                url: '{{ url("login")}}',
-                                dataType: "json",
-                                data: $('#frm-login').serialize(),
-                                beforeSend: function (r) {
-                                    $('#btn-login').attr('disabled',true);
-                                },
-                                success: function(r) {
-                                    if(r.status == 1) {
-                                        // toastr.success('Success login', 'Success', {timeOut: 2000});
-                                        // setTimeout(function() {
-                                            window.location.href = '{{ url("/") }}';  
-                                        // }, 2500);
-                                    } else {
-                                        toastr.error(r.message,'Error', {timeOut: 3000});                        
-                                    }
-                                },
-                                error: function(r) {
-                                    toastr.error('Terjadi kesalahan, cobalah beberapa saat lagi','Error', {timeOut: 3000});
-                                },
-                                complete: function(r) {
-                                    $('#btn-login').attr('disabled', false);
-                                }
-                            });
-                        }
-                    });
-                });
-            });
-        </script>
         @endif
 
         @yield('script')

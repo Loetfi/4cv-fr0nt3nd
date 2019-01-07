@@ -55,7 +55,7 @@ class AuthController extends Controller
                     'user' => (array) $r->data->data
                 ]);
 
-                session()->flash('flash_notification',['type'=>'success','message'=>'Berhasil Login']);
+                session()->flash('flash_notification',['type'=>'warning','message'=>'Berhasil Login']);
                 
                 return redirect('/');
 
@@ -127,9 +127,10 @@ class AuthController extends Controller
                     'user' => (array) $r->data->data
                 ]);
                 
-                session()->flash('flash_notification',['type'=>'success','message'=>'Berhasil login']);
+                session()->flash('flash_notification',['type'=>'warning','message'=>'Berhasil login']);
 
-                return response()->json(Api::format('1',[],'Success login'), 200);
+                return redirect('/');
+                // return response()->json(Api::format('1',[],'Success login'), 200); use ajax
             } else {
                 // 2 condition, account not active or password wrong
                 return response()->json(Api::format('0',[],$login->data->message), 200);

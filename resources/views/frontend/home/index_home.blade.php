@@ -3,6 +3,14 @@
 @section('title','ACV Homepage')
 
 @section('content')
+    <!-- flash message -->
+    @if (session()->has('flash_notification.message'))
+    <div class="notify">
+    	<span class="{{ session()->get('flash_notification.type') }}">{!! session()->get('flash_notification.message') !!}</strong>
+    	</span>
+    </div>
+    @endif
+    <!-- end flash message -->
 	<header>
 	    <div class="row-down"><i class="fa fa-chevron-down"></i></div>
 	    <div id="carouselHacked" class="carousel slide carousel-fade" data-ride="carousel">
@@ -50,7 +58,7 @@
 	        <span class="sr-only">Next</span>
 	        </a>
 	    </div>
-
+	    {{-- 
 	    @if (session()->has('flash_notification.message'))
 		  	<div id="flash_notification">
 			  	<div class="alert alert-{{ session()->get('flash_notification.type') }} alert-dismissible">
@@ -59,6 +67,7 @@
 			  	</div>
 		  	</div>
 		@endif
+		--}}
 
 	</header>
 
@@ -367,8 +376,14 @@
 	<!-- PARALLAX -->
 	<script>
 	    $(document).scroll(function () {  
-	      var $movebg = $(window).scrollTop() * -0.3;
-	      $('.parallax').css('background-positionY', ($movebg) + 'px');
+	      	var $movebg = $(window).scrollTop() * -0.3;
+	      	$('.parallax').css('background-positionY', ($movebg) + 'px');
 	    });
+	</script>
+	<!-- splash screen while page loading -->
+	<script type="text/javascript">
+		$(window).load(function() {
+		  $(".notify").delay(3000).fadeOut("slow");
+		})
 	</script>
 @endsection
